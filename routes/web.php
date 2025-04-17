@@ -7,27 +7,44 @@ use App\Http\Controllers\NoteController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectFileController;
 use App\Http\Controllers\ReminderController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoutineController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\UserController;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\CheckRole;
+
 
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login']);
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::middleware(['auth'])->group(function () {
+
+
+Route::middleware(['auth', 'checkRole:1'])->group(function () {
+
+    Route::get('/', [LoginController::class, 'dashboard'])->name('dashboard');
+
+ 
     Route::controller(MailController::class)->prefix('mail')->name('mail.')->group(function () {
-        Route::get('/', 'index')->name('inbox');
+        Route::get('/', 'index')->name('inbox');    
     });
+
     Route::resource('projects', ProjectController::class);
     Route::post('project/team', [ProjectController::class, 'addMember'])->name('projects.addMember');
+    
     Route::get('projects/{project}/tasks', [TaskController::class, 'index'])->name('projects.tasks.index');
     Route::post('projects/{project}/tasks', [TaskController::class, 'store'])->name('projects.tasks.store');
 
+    Route::get('tasks', [TaskController::class, 'showall'])->name('tasks.showall');
+
+    Route::get('tasks/assigned', [TaskController::class, 'assigned'])->name('tasks.assigned');
+
     Route::get('tasks/{task}', [TaskController::class, 'show'])->name('tasks.show');
     Route::put('tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
-    Route::post('tasks/{task}/update-status', [TaskController::class, 'updateStatus']);
+    Route::post('/projects/tasks/{task}/update-status', [TaskController::class, 'updateStatus']);
     
     Route::resource('routines', RoutineController::class)->except(['show']);
     Route::get('routines/showAll', [RoutineController::class, 'showAll'])->name('routines.showAll');
@@ -39,29 +56,26 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('reminders', ReminderController::class);
     Route::resource('checklist-items', ChecklistItemController::class);
     Route::get('checklist-items/{checklistItem}/update-status', [ChecklistItemController::class, 'updateStatus'])->name('checklist-items.update-status');
-    Route::get('/', function () {
-        $user = Auth::user();
-        $tasksCount = $user->tasks()->count();
-        $routinesCount = $user->routines()->count();
-        $notesCount = $user->notes()->count();
-        $remindersCount = $user->reminders()->count();
-        $filesCount = $user->files()->count();
-        $recentTasks = $user->tasks()->latest()->take(5)->get();
-        $todayRoutines = $user->routines()->whereDate('start_time', now())->get();
-        $recentNotes = $user->notes()->latest()->take(5)->get();
 
-        $upcomingReminders = $user->reminders()->where('date', '>=', now())->orderBy('date')->take(5)->get();
+    Route::get('users/create', [UserController::class, 'create'])->name('users.create');
+    Route::get('users', [UserController::class, 'index'])->name('users.index');
+    Route::get('users/{user}', [UserController::class, 'edit'])->name('users.edit');
+    Route::post('users', [UserController::class, 'store'])->name('users.store');
 
-        return view('dashboard', compact(
-            'tasksCount', 
-            'routinesCount', 
-            'notesCount', 
-            'remindersCount',
-            'filesCount', 
-            'recentTasks', 
-            'todayRoutines', 
-            'recentNotes', 
-            'upcomingReminders'
-        ));
-    })->name('dashboard');
+    Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
+});
+
+Route::middleware(['auth', 'checkRole:2'])->group(function () {
+
+    Route::get('/emp-dash', [LoginController::class, 'employee_dashboard'])->name('employee_dashboard');
+
+    Route::get('/emp-depart', [ProjectController::class, 'employee_index'])->name('projects.employee_index');
+    Route::get('/emp-depart/{id}', [ProjectController::class, 'employee_show'])->name('projects.employee_show');
+    Route::get('/emp-tasks', [TaskController::class, 'employee_show'])->name('tasks.employee_show');
+    Route::get('/emp-depart-tasks', [TaskController::class, 'employee_depart_tasks'])->name('employee_depart_tasks');
+    Route::get('/emp-tasks/{task}', [TaskController::class, 'employee_task_show'])->name('tasks.employee_task_show');
+    Route::get('/emp-routines', [RoutineController::class, 'employee_index'])->name('routines.employee_index');
+    Route::put('emp-tasks/{task}/update', [TaskController::class, 'update'])->name('tasks.employee_update');
+    Route::post('emp-tasks-create/{project}', [TaskController::class, 'store'])->name('tasks.employee_task_create');
+
 });

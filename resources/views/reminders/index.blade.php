@@ -1,5 +1,7 @@
 @extends('layouts.app')
-
+@section('title')
+    Reminders
+@endsection
 @section('content')
 <div class="container">
     <div class="d-flex justify-content-between align-items-center bg-white shadow-sm p-3 rounded mb-4">

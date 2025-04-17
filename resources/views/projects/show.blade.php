@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('title')
-    {{ $project->name }} - Project Details
+    {{ $project->name }} - Department Details
 @endsection
 @section('content')
     <div class="container">
@@ -17,16 +17,10 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ $project->name }}</h5>
                         <p class="card-text">{{ $project->description }}</p>
-                        <p class="card-text"><strong>Start Date:</strong>
-                            {{ \Carbon\Carbon::parse($project->start_date)->format('Y-m-d') }}</p>
-                        <p class="card-text"><strong>End Date:</strong>
-                            {{ \Carbon\Carbon::parse($project->end_date)->format('Y-m-d') }}</p>
-                        <p class="card-text"><strong>Status:</strong>
-                            {{ $project->status == 'pending' ? 'Pending' : ($project->status == 'on_going' ? 'In Progress' : 'Completed') }}
-                        </p>
-                        <p class="card-text"><strong>Budget:</strong> ${{ $project->budget }}</p>
 
-                        <h5 class="mt-4">Project Progress</h5>
+                        <h5 class="mt-4">Project Progress 
+                        <span class="text-muted small">(Tasks completed out of Pending tasks)</span>
+                        </h5>
                         @php
                             $totalTasks = $project->tasks->count();
                             $completedTasks = $project->tasks->where('status', 'completed')->count();
@@ -38,7 +32,7 @@
                                 {{ round($progress) }}%</div>
                         </div>
 
-                        <a href="{{ route('projects.index') }}" class="btn btn-secondary mt-3">Back to Projects</a>
+                        <a href="{{ route('projects.index') }}" class="btn btn-secondary mt-3">Back to Departments</a>
                     </div>
                 </div>
             </div>

@@ -22,6 +22,14 @@
                         @enderror
                     </div>
                     <div class="mb-3">
+                        <label for="project" class="form-label">Department</label>
+                        <select name="project" id="project" class="form-select" required>
+                        @foreach ($projects as $project)
+                            <option value="{{ $project->id }}">{{ $project->name }}</option>
+                        @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-3">
                         <label for="frequency" class="form-label">Frequency</label>
                         <select name="frequency" id="frequency" class="form-select" required>
                             <option value="daily">Daily</option>
@@ -65,14 +73,14 @@
                     </div>
                     <div class="mb-3">
                         <label for="start_time" class="form-label">Start Time</label>
-                        <input type="time" name="start_time" id="start_time" class="form-control" required>
+                        <input type="time" name="start_time" id="start_time" class="form-control">
                         @error('start_time')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="mb-3">
                         <label for="end_time" class="form-label">End Time</label>
-                        <input type="time" name="end_time" id="end_time" class="form-control" required>
+                        <input type="time" name="end_time" id="end_time" class="form-control">
                         @error('end_time')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror

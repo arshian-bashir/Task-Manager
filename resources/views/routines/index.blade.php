@@ -1,5 +1,7 @@
 @extends('layouts.app')
-
+@section('title')
+    Routines
+@endsection
 @section('content')
     <div class="container">
         <div class="d-flex justify-content-between align-items-center bg-white shadow-sm p-3 rounded mb-4">
@@ -25,9 +27,11 @@
                                         <h5 class="card-title">{{ $routine->title }}</h5>
                                         <p class="card-text">{{ $routine->description }}</p>
                                         <p class="card-text"><strong>Days:</strong>
-                                            {{ implode(', ', json_decode($routine->days, true) ?? []) }}</p>
-                                        <p class="card-text"><strong>Time:</strong> {{ $routine->start_time }} -
-                                            {{ $routine->end_time }}</p>
+                                        {{ implode(', ', array_map('ucfirst', json_decode($routine->days, true) ?? [])) }}
+                                        </p>
+                                        <p class="card-text"><strong>Department:</strong>
+                                        {{ $routine->project->name ?? 'No Department' }}
+                                        </p>
                                         <div class="d-flex justify-content-between">
                                             <a href="{{ route('routines.edit', $routine->id) }}" class="btn btn-warning"><i
                                                     class="bi bi-pencil"></i></a>
@@ -65,8 +69,6 @@
                                         <p class="card-text">{{ $routine->description }}</p>
                                         <p class="card-text"><strong>Weeks:</strong>
                                             {{ implode(', ', json_decode($routine->weeks, true) ?? []) }}</p>
-                                        <p class="card-text"><strong>Time:</strong> {{ $routine->start_time }} -
-                                            {{ $routine->end_time }}</p>
                                         <div class="d-flex justify-content-between">
                                             <a href="{{ route('routines.edit', $routine->id) }}"
                                                 class="btn btn-warning">Edit</a>
@@ -109,8 +111,9 @@
                                                 }, json_decode($routine->months, true) ?? []),
                                             ) }}
                                         </p>
-                                        <p class="card-text"><strong>Time:</strong> {{ $routine->start_time }} -
-                                            {{ $routine->end_time }}</p>
+                                        <p class="card-text"><strong>Department:</strong>
+                                            {{ $routine->project->name ?? 'No Department' }}
+                                        </p>
                                         <div class="d-flex justify-content-between">
                                             <a href="{{ route('routines.edit', $routine->id) }}"
                                                 class="btn btn-warning">Edit</a>

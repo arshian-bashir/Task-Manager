@@ -20,6 +20,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -54,7 +55,7 @@ class User extends Authenticatable
      */
     public function tasks()
     {
-        return $this->hasMany(Task::class);
+        return $this->hasMany(Task::class)->whereRaw("FIND_IN_SET(?, user_id)", [auth()->id()]);
     }
 
     /**
@@ -89,5 +90,13 @@ class User extends Authenticatable
     public function projectMembers()
     {
         return $this->belongsToMany(Project::class, 'project_teams', 'user_id', 'project_id');
+    }
+    public function assignedTasks()
+    {
+        return Task::whereRaw("FIND_IN_SET(?, user_id)", [$this->id]);
+    }
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
     }
 }

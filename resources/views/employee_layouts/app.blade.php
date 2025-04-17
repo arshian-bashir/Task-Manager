@@ -15,7 +15,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
 
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
     <style>
         body {
             display: flex;
@@ -106,7 +108,7 @@
 <body>
     <div class="sidebar d-flex flex-column p-3">
         <h4 class="mb-4 text-center">
-            <a href="{{ route('dashboard') }}">
+            <a href="{{ route('employee_dashboard') }}">
                 <img style=" filter: invert(100%) brightness(200%);"
                     src="{{ asset('assets/img/logo-circle-horizontal.png') }}" class="img-fluid" width="100%"
                     alt="task manager">
@@ -114,18 +116,18 @@
         </h4>
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link {{ request()->is('/') ? 'active' : '' }}" href="{{ route('dashboard') }}">
+                <a class="nav-link {{ request()->is('/') ? 'active' : '' }}" href="{{ route('employee_dashboard') }}">
                     <i class="bi bi-house-door"></i> Home
                 </a>
             </li>
             {{-- <li class="nav-item">
-                <a class="nav-link {{ request()->is('mail*') ? 'active' : '' }}" href="{{ route('mail.inbox') }}">
+                <a class="nav-link {{ request()->is('mail*') ? 'active' : '' }}" href="#">
                     <i class="bi bi-inbox"></i> Inbox
                 </a>
             </li> --}}
             <li class="nav-item">
                 <a class="nav-link {{ request()->is('projects*') ? 'active' : '' }}"
-                    href="{{ route('projects.index') }}">
+                    href="{{ route('projects.employee_index') }}">
                     <i class="bi bi-folder"></i> Departments
                 </a>
             </li>
@@ -135,41 +137,31 @@
                     <i class="bi bi-check2-square"></i> Tasks
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="tasksDropdown">
-                    <li><a class="dropdown-item" href="{{ route('tasks.showall') }}">Tasks assigned to me</a></li>
-                    <li><a class="dropdown-item" href="{{ route('tasks.assigned') }}">Tasks I've assigned to others</a></li>
+                    <li><a class="dropdown-item" href="{{ route('tasks.employee_show') }}">Tasks assigned to me</a></li>
+                    <li><a class="dropdown-item" href="{{ route('employee_depart_tasks') }}">Tasks assigned to {{ Auth::user()->project->name }}</a></li>
                 </ul>
             </li>
 
             <li class="nav-item">
                 <a class="nav-link {{ request()->is('routines*') ? 'active' : '' }}"
-                    href="{{ route('routines.index') }}">
+                    href="{{ route('routines.employee_index')}}">
                     <i class="bi bi-calendar-check"></i> Routines
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ request()->is('notes*') ? 'active' : '' }}" href="{{ route('notes.index') }}">
+                <a class="nav-link {{ request()->is('notes*') ? 'active' : '' }}" href="#">
                     <i class="bi bi-sticky"></i> Notes
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ request()->is('reminders*') ? 'active' : '' }}"
-                    href="{{ route('reminders.index') }}">
+                    href="#">
                     <i class="bi bi-bell"></i> Reminders
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ request()->is('files*') ? 'active' : '' }}" href="{{ route('files.index') }}">
-                    <i class="bi bi-clipboard"></i> Files
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {{ request()->is('files*') ? 'active' : '' }}" href="{{ route('reports.index') }}">
-                    <i class="bi bi-bar-chart"></i> Reports 
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {{ request()->is('files*') ? 'active' : '' }}" href="{{ route('users.index') }}">
-                    <i class="bi bi-person"></i> Users 
+                <a class="nav-link {{ request()->is('files*') ? 'active' : '' }}" href="#">
+                    <i class="bi bi-file"></i> Files
                 </a>
             </li>
         </ul>

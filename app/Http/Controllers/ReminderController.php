@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Reminder;
+use App\Models\User;
+use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,7 +18,9 @@ class ReminderController extends Controller
 
     public function create()
     {
-        return view('reminders.create');
+        $projects = Project::all();
+        $users = User::all();
+        return view('reminders.create', compact('projects', 'users'));
     }
 
     public function store(Request $request)

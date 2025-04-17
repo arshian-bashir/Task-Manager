@@ -17,11 +17,22 @@
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label for="description" class="form-label">Description</label>
+                        <label for="description" class="form-label">Description </label>
                         <textarea name="description" id="description" class="form-control">{{ $routine->description }}</textarea>
                         @error('description')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="project" class="form-label">Department</label>
+                        <select name="project" id="project" class="form-select" required>
+                            @foreach ($projects as $project)
+                                <option value="{{ $project->id }}" 
+                                    {{ $routine->project_id == $project->id ? 'selected' : '' }}>
+                                    {{ $project->name }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="mb-3">
                         <label for="frequency" class="form-label">Frequency</label>
@@ -74,7 +85,7 @@
                     <div class="mb-3">
                         <label for="start_time" class="form-label">Start Time</label>
                         <input type="time" name="start_time" id="start_time" class="form-control"
-                            value="{{ $routine->start_time }}" required>
+                            value="{{ $routine->start_time }}">
                         @error('start_time')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -82,7 +93,7 @@
                     <div class="mb-3">
                         <label for="end_time" class="form-label">End Time</label>
                         <input type="time" name="end_time" id="end_time" class="form-control"
-                            value="{{ $routine->end_time }}" required>
+                            value="{{ $routine->end_time }}">
                         @error('end_time')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror

@@ -13,7 +13,7 @@
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title">Tasks</h5>
                         <p class="card-text flex-grow-1">You have <strong>{{ $tasksCount }}</strong> tasks pending.</p>
-                        <a href="{{ route('projects.index') }}" class="btn btn-primary mt-auto">View Tasks</a>
+                        <a href="{{ route('tasks.showall') }}" class="btn btn-primary mt-auto">View Tasks</a>
                     </div>
                 </div>
             </div>
@@ -47,7 +47,7 @@
         </div>
 
         <div class="row mb-4">
-            <div class="col-md-6 mb-4">
+            <div class="col-md-4 mb-4">
                 <div class="card shadow-sm h-100">
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title">Recent Tasks</h5>
@@ -62,29 +62,30 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 mb-4">
+            <div class="col-md-4 mb-4">
                 <div class="card shadow-sm h-100">
                     <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">Today's Routines</h5>
+                        <h5 class="card-title">Tasks Due Today</h5>
                         <ul class="list-group flex-grow-1">
-                            @foreach($todayRoutines as $routine)
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    {{ $routine->title }}
-                                    <span class="badge bg-primary rounded-pill">{{ $routine->frequency }}</span>
+                            @foreach($dueToday as $task)
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    {{ $task->title }}                                    
+                                    <span class="badge bg-warning rounded-pill">{{ \Carbon\Carbon::parse($task->due_date)->format('d M, Y') }}</span>
                                 </li>
                             @endforeach
                         </ul>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 mb-4">
+            <div class="col-md-4 mb-4">
                 <div class="card shadow-sm h-100">
                     <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">Recent Notes</h5>
+                        <h5 class="card-title">Tasks Over Due</h5>
                         <ul class="list-group flex-grow-1">
-                            @foreach($recentNotes as $note)
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    {{ $note->title }}
+                            @foreach($overdueTasks as $task)
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    {{ $task->title }}
+                                    <span class="badge bg-danger rounded-pill">{{ \Carbon\Carbon::parse($task->due_date)->format('d M, Y') }}</span>
                                 </li>
                             @endforeach
                         </ul>

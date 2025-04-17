@@ -33,7 +33,20 @@
                                     @endif
                                 </p>
 
-                                <p class="card-text"><strong>Assign To:</strong> {{ $task->user->name }}</p>
+                                <p class="card-text"><strong>Assign To:</strong> 
+                                    @php
+                                        $userIds = explode(',', $task->user_id);
+                                        $users = \App\Models\User::whereIn('id', $userIds)->get();
+                                    @endphp
+
+                                    @if($users->isNotEmpty())
+                                        @foreach($users as $user)
+                                            <span class="badge bg-info">{{ $user->name }}</span>
+                                        @endforeach
+                                    @else
+                                        <span class="text-muted">Unassigned</span>
+                                    @endif
+                                </p>
 
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                     data-bs-target="#editTaskModal"> <i class="bi bi-pencil-square"></i> </button>
@@ -296,30 +309,6 @@
                 })
                 .catch(error => console.error('Error:', error));
         }
-
-        // function toggleChecklistItem(itemId) {
-        //     const checkbox = document.getElementById(`checklist-item-checkbox-${itemId}`);
-        //     const form = document.getElementById(`edit-checklist-form-${itemId}`);
-        //     const formData = new FormData(form);
-        //     formData.append('completed', checkbox.checked ? '1' : '0');
-
-        //     fetch(form.action, {
-        //         method: 'POST',
-        //         headers: {
-        //             'X-CSRF-TOKEN': '{{ csrf_token() }}'
-        //         },
-        //         body: formData
-        //     })
-        //     .then(response => response.json())
-        //     .then(data => {
-        //         if (data.success) {
-        //             const itemElement = checkbox.closest('li');
-        //             const label = checkbox.nextElementSibling;
-        //             label.classList.toggle('text-decoration-line-through', checkbox.checked);
-        //         }
-        //     })
-        //     .catch(error => console.error('Error:', error));
-        // }
 
         function deleteChecklistItem(itemId) {
             const form = document.getElementById(`delete-checklist-form-${itemId}`);

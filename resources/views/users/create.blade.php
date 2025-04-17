@@ -1,13 +1,15 @@
 @extends('layouts.app')
 @section('title')
-    Create Department
+    Dashboard
 @endsection
 @section('content')
-    <div class="container mb-3">
-        <h2 class="mb-4 shadow-sm p-3 rounded bg-white">Create Department</h2>
+
+    
+<div class="container mb-3">
+        <h2 class="mb-4 shadow-sm p-3 rounded bg-white">Create User</h2>
         <div class="card border-0 shadow-sm m-auto" style="max-width: 600px;">
             <div class="card-body">
-                <form action="{{ route('projects.store') }}" method="POST">
+                <form action="{{ route('users.store') }}" method="POST">
                     @csrf
                     <div class="mb-3">
                         <label for="name" class="form-label">Name</label>
@@ -17,23 +19,28 @@
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label for="description" class="form-label">Description</label>
-                        <textarea name="description" id="description" class="form-control"></textarea>
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" name="email" id="email" class="form-control" required>
                         @error('description')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label for="description" class="form-label">Description</label>
-                        <textarea name="description" id="description" class="form-control"></textarea>
+                        <label for="password" class="form-label">Password</label>
+                        <input type="text" name="password" id="password" class="form-control" required>
                         @error('description')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label for="description" class="form-label">Description</label>
-                        <textarea name="description" id="description" class="form-control"></textarea>
-                        @error('description')
+                        <label for="department" class="form-label">Department</label>
+                        <select name="project_id" id="department" class="form-control" required>
+                            <option value="">Select Project</option>
+                            @foreach($projects as $project)
+                                <option value="{{ $project->id }}">{{ $project->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('project_id')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
@@ -44,4 +51,5 @@
             </div>
         </div>
     </div>
+
 @endsection

@@ -12,6 +12,7 @@ class Routine extends Model
         'user_id',
         'title',
         'description',
+        'project_id',
         'frequency',
         'days',
         'weeks',
@@ -24,4 +25,9 @@ class Routine extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
+
 }

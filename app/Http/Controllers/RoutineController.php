@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Routine;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Project;
 use Carbon\Carbon;
 
 class RoutineController extends Controller
@@ -12,29 +13,35 @@ class RoutineController extends Controller
     {
         $today = Carbon::today();
         $upcomingDailyRoutines = Auth::user()->routines()
+            ->with('project')
             ->where('frequency', 'daily')
             ->whereJsonContains('days', strtolower($today->format('l')))
             ->take(2)
             ->get();
 
         $upcomingWeeklyRoutines = Auth::user()->routines()
+            ->with('project')
             ->where('frequency', 'weekly')
             ->whereJsonContains('weeks', $today->weekOfYear)
             ->take(2)
             ->get();
 
         $upcomingMonthlyRoutines = Auth::user()->routines()
+            ->with('project')
             ->where('frequency', 'monthly')
-            ->whereJsonContains('months', $today->month)
-            ->take(2)
-            ->get();
+            ->get()
+            ->filter(function ($routine) use ($today) {
+                $months = json_decode($routine->months, true);
+                return is_array($months) && in_array($today->month, $months);
+            });
 
         return view('routines.index', compact('upcomingDailyRoutines', 'upcomingWeeklyRoutines', 'upcomingMonthlyRoutines'));
     }
 
     public function create()
-    {
-        return view('routines.create');
+    {   
+        $projects = Project::all();
+        return view('routines.create', compact('projects'));
     }
 
     public function store(Request $request)
@@ -46,11 +53,19 @@ class RoutineController extends Controller
             'days' => 'nullable|array',
             'weeks' => 'nullable|array',
             'months' => 'nullable|array',
-            'start_time' => 'required',
-            'end_time' => 'required',
+            'project' => 'required|exists:projects,id',
         ]);
 
-        $routineData = $request->all();
+        $routineData = $request->only([
+            'title',
+            'description',
+            'frequency',
+            'start_time',
+            'end_time'
+        ]);
+        
+        $routineData['project_id'] = $request->project;
+        
         if ($request->has('days')) {
             $routineData['days'] = json_encode($request->days);
         }
@@ -60,15 +75,16 @@ class RoutineController extends Controller
         if ($request->has('months')) {
             $routineData['months'] = json_encode($request->months);
         }
-
+        
         Auth::user()->routines()->create($routineData);
 
         return redirect()->route('routines.index')->with('success', 'Routine created successfully.');
     }
 
     public function edit(Routine $routine)
-    {
-        return view('routines.edit', compact('routine'));
+    {   
+        $projects = Project::all();
+        return view('routines.edit', compact('routine','projects'));
     }
 
     public function update(Request $request, Routine $routine)
@@ -80,11 +96,15 @@ class RoutineController extends Controller
             'days' => 'nullable|array',
             'weeks' => 'nullable|array',
             'months' => 'nullable|array',
-            'start_time' => 'required',
-            'end_time' => 'required',
+            'project' => 'required|exists:projects,id',
+            'start_time' => 'nullable',
+            'end_time' => 'nullable',
         ]);
-
+    
         $routineData = $request->all();
+    
+        $routineData['project_id'] = $request->project;
+    
         if ($request->has('days')) {
             $routineData['days'] = json_encode($request->days);
         }
@@ -94,9 +114,9 @@ class RoutineController extends Controller
         if ($request->has('months')) {
             $routineData['months'] = json_encode($request->months);
         }
-
+    
         $routine->update($routineData);
-
+    
         return redirect()->route('routines.index')->with('success', 'Routine updated successfully.');
     }
 
@@ -131,5 +151,23 @@ class RoutineController extends Controller
     {
         $monthlyRoutines = Auth::user()->routines()->where('frequency', 'monthly')->get();
         return view('routines.monthly', compact('monthlyRoutines'));
+    }
+    public function employee_index(Request $request)
+    {
+        $user = Auth::user();
+        $userProjectId = $user->project_id;
+
+        $upcomingDailyRoutines = Routine::where('project_id',$userProjectId)
+        ->where('frequency', 'daily')
+        ->get();
+
+        $upcomingWeeklyRoutines = Routine::where('project_id',$userProjectId)
+        ->where('frequency', 'weekly')
+        ->get();
+
+        $upcomingMonthlyRoutines = Routine::where('project_id',$userProjectId)
+            ->where('frequency', 'monthly')
+            ->get();
+        return view('routines.employee_index', compact('upcomingDailyRoutines','upcomingWeeklyRoutines','upcomingMonthlyRoutines'));
     }
 }

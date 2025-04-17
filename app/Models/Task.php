@@ -1,27 +1,24 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
 class Task extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
         'project_id',
+        'user_id',
         'title',
         'description',
         'due_date',
         'priority',
         'status',
     ];
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
 
     public function project()
     {
@@ -45,5 +42,11 @@ class Task extends Model
     public function checklistItems()
     {
         return $this->hasMany(ChecklistItem::class);
+    }
+
+    public function assignedUsers()
+    {
+        $ids = array_filter(explode(',', $this->user_id));
+        return User::whereIn('id', $ids)->get();
     }
 }

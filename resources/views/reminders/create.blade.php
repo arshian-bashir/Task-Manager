@@ -5,7 +5,7 @@
         <h2 class="mb-4 shadow-sm p-3 rounded bg-white">Add Reminder</h2>
         <div class="card border-0 shadow-sm m-auto" style="max-width: 600px;">
             <div class="card-body">
-                <form action="{{ route('reminders.store') }}" method="POST">
+                <form action="#" method="POST">
                     @csrf
                     <div class="mb-3">
                         <label for="title" class="form-label">Title</label>
@@ -18,6 +18,17 @@
                         <label for="description" class="form-label">Description</label>
                         <textarea name="description" id="description" class="form-control" rows="5"></textarea>
                         @error('description')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="project" class="form-label">Department</label>
+                        <select name="project" id="project" class="form-select" required>
+                            @foreach ($projects as $project)
+                                <option value="{{ $project-> id }}">{{ $project-> name }}</option>
+                            @endforeach
+                        </select>
+                        @error('priority')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>

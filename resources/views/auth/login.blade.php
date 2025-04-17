@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome to Task Manager</title>
     <link rel="shortcut icon" href="{{ asset('assets/img/logo-circle.png') }}" type="image/x-icon">
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
         body {
             display: flex;
@@ -19,7 +21,6 @@
             font-family: 'Poppins', sans-serif;
         }
 
-
         .card-header {
             background-color: #495057;
             color: white;
@@ -28,8 +29,10 @@
             font-size: 1.25rem;
             font-weight: 500;
         }
-        .card-header img{
+
+        .card-header img {
             filter: invert(100%) brightness(200%);
+            max-height: 50px; /* Ensures the logo is not too big */
         }
 
         .btn-primary {
@@ -61,10 +64,13 @@
     <div class="row justify-content-center">
         <div class="col-md-5">
             <div class="card border-0 shadow-sm">
-                <div class="card-header text-center p-4 fs-1">
-                    <img src="{{ asset('assets/img/logo-horizontal.png') }}" class="img-fluid" alt="task manager">
+                <!-- Header -->
+                <div class="card-header text-center p-3 d-flex align-items-center justify-content-center">
+                    <img src="{{ asset('assets/img/logo-horizontal.png') }}" class="img-fluid" alt="Task Manager Logo">
                 </div>
-                <div class="card-body">
+
+                <!-- Login Form -->
+                <div class="card-body p-4">
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
                         <div class="mb-3">
@@ -74,6 +80,7 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
+
                         <div class="mb-3">
                             <label for="password" class="form-label">Password</label>
                             <input type="password" name="password" id="password" class="form-control" required>
@@ -81,18 +88,21 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
+
                         <div class="mb-3 form-check">
                             <input type="checkbox" name="remember" id="remember" class="form-check-input">
                             <label for="remember" class="form-check-label">Remember Me</label>
                         </div>
+
                         <div class="d-grid mb-4">
                             <button type="submit" class="btn btn-primary">Login</button>
                         </div>
                     </form>
                 </div>
 
-                <div class="card-footer text-center">
-                   <p>Developed by: <a class="text-decoration-none text-black" href="https://github.com/arafat-web" target="_blank">Arafat Hossain Ar</a></p>
+                <!-- Footer -->
+                <div class="card-footer text-center pt-2">
+                   <p>&copy; {{ date('Y') }} Task Manager | Developed by Denning IT Software Department</p>
                 </div>
             </div>
         </div>

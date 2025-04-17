@@ -10,14 +10,7 @@ class ProjectController extends Controller
 {
     public function index()
     {
-        $projects = Auth::user()->projects()->withCount(['tasks as to_do_tasks' => function ($query) {
-            $query->where('status', 'to_do');
-        }, 'tasks as in_progress_tasks' => function ($query) {
-            $query->where('status', 'in_progress');
-        }, 'tasks as completed_tasks' => function ($query) {
-            $query->where('status', 'completed');
-        }])->get();
-
+        $projects = Project::all();
         return view('projects.index', compact('projects'));
     }
 
@@ -31,13 +24,9 @@ class ProjectController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date',
-            'status' => 'required|in:not_started,in_progress,completed',
-            'budget' => 'nullable|numeric',
         ]);
 
-        Auth::user()->projects()->create($request->all());
+        Project::create($request->all());
 
         return redirect()->route('projects.index')->with('success', 'Project created successfully.');
     }
@@ -58,10 +47,7 @@ class ProjectController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date',
-            'status' => 'required|in:not_started,in_progress,completed',
-            'budget' => 'nullable|numeric',
+
         ]);
 
         $project->update($request->all());
@@ -86,5 +72,18 @@ class ProjectController extends Controller
         $project = Project::find($request->project_id);
         $project->teamProjects()->attach($request->user_id);
         return redirect()->back()->with('success', 'User added successfully.');
+    }
+    public function employee_index()
+    {
+        $projects = Project::all();
+
+        return view('projects.employee_index', compact('projects'));
+    }
+    public function employee_show(Request $request, $id)
+    {
+
+        $users = User::where('project_id', $id)->get();
+
+        return view('projects.employee_show', compact('users'));
     }
 }

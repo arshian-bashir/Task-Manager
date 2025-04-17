@@ -12,10 +12,11 @@
         }
 
         .kanban-list {
-            min-height: 500px;
-            background-color: #e9ecef;
-            border-radius: 5px;
+            min-height: 200px;
+            background-color: #f8f9fa;
+            border: 2px dashed #ccc;
             padding: 10px;
+            border-radius: 8px;
         }
 
         .kanban-item {
@@ -26,6 +27,7 @@
             opacity: 0.4;
         }
     </style>
+    
     <div class="container">
         <div class="bg-white align-items-center mb-4 shadow-sm p-3 rounded">
             <h2 class="text-center">{{ $project->name }} - Tasks</h2>
@@ -77,7 +79,9 @@
                         @foreach ($tasks['in_progress'] ?? [] as $task)
                             <div class="card mb-3 kanban-item" data-id="{{ $task->id }}" draggable="true">
                                 <div class="card-body">
-                                    <h5 class="card-title">{{ $task->title }}</h5>
+                                    <h5 class="card-title">{{ $task->title }}
+                                    <span style="font-size: 12px;" class="badge {{ $task->priority == 'low' ? 'bg-success' : ($task->priority == 'medium' ? 'bg-warning' : 'bg-danger') }}">{{ ucfirst($task->priority) }}</span>
+                                    </h5>
                                     <p class="card-text">{{ $task->description }}</p>
                                     <a href="{{ route('tasks.show', $task->id) }}" class="btn btn-warning btn-sm"><i class="bi bi-eye"></i></a>
                                 </div>
@@ -98,7 +102,9 @@
                         @foreach ($tasks['completed'] ?? [] as $task)
                             <div class="card mb-3 kanban-item" data-id="{{ $task->id }}" draggable="true">
                                 <div class="card-body">
-                                    <h5 class="card-title">{{ $task->title }}</h5>
+                                    <h5 class="card-title">{{ $task->title }}
+                                    <span style="font-size: 12px;" class="badge {{ $task->priority == 'low' ? 'bg-success' : ($task->priority == 'medium' ? 'bg-warning' : 'bg-danger') }}">{{ ucfirst($task->priority) }}</span>
+                                    </h5>
                                     <p class="card-text">{{ $task->description }}</p>
                                     <a href="{{ route('tasks.show', $task->id) }}" class="btn btn-success btn-sm"><i class="bi bi-eye"></i></a>
                                 </div>
@@ -153,17 +159,23 @@
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
-                            <div class="mb-3">
-                                <label for="user_id" class="form-label">Assign To</label>
-                                <select name="user_id" id="user_id" class="form-select">
-                                    <option value="{{auth()->user()->id}}">Self</option>
-                                    @foreach ($users as $user)  
-                                        <option value="{{$user->id}}">{{$user->name}}</option>
+                            <div class="dropdown">
+                                <button class="btn btn-primary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Assign Users
+                                </button>
+                                
+                                <ul class="dropdown-menu p-3" aria-labelledby="userDropdown" style="max-height: 300px; overflow-y: auto;">
+                                    
+                                    @foreach ($users as $user)
+                                   
+                                        @if ($user->id != auth()->user()->id)
+                                            <li class="form-check">
+                                                <input type="checkbox" name="user_id[]" id="user_{{ $user->id }}" class="form-check-input" value="{{ $user->id }}">
+                                                <label for="user_{{ $user->id }}" class="form-check-label">{{ $user->name }}</label>
+                                            </li>
+                                        @endif
                                     @endforeach
-                                </select>
-                                @error('user_id')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
+                                </ul>
                             </div>
                             <input type="hidden" name="status" id="task_status">
 
@@ -184,6 +196,10 @@
             const kanbanLists = document.querySelectorAll('.kanban-list');
             const createTaskModal = document.getElementById('createTaskModal');
             const taskStatusInput = document.getElementById('task_status');
+
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            console.log('CSRF Token:', csrfToken);
 
             createTaskModal.addEventListener('show.bs.modal', function(event) {
                 var button = event.relatedTarget; 
@@ -220,7 +236,17 @@
                 e.preventDefault();
                 const id = e.dataTransfer.getData('text');
                 const draggableElement = document.querySelector(`.kanban-item[data-id='${id}']`);
-                const dropzone = e.target.closest('.kanban-list');
+                let dropzone = e.target;
+
+                while (dropzone && !dropzone.classList.contains('kanban-list')) {
+                    dropzone = dropzone.parentElement;
+                }        
+                if (!dropzone) {
+                    console.error('Dropzone not found');
+                    return;
+                }
+                console.log('Dropzone:', dropzone);
+        
                 dropzone.appendChild(draggableElement);
 
                 const status = dropzone.id;
@@ -229,11 +255,11 @@
             }
 
             function updateTaskStatus(id, status) {
-                fetch(`/tasks/${id}/update-status`, {
+                fetch(`{{ url('projects/tasks/${id}/update-status') }}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        'X-CSRF-TOKEN': csrfToken  
                     },
                     body: JSON.stringify({
                         status
