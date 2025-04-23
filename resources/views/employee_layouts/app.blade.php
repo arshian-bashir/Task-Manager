@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> @yield('title') | Task Manager </title>
-    <link rel="shortcut icon" href="{{ asset('assets/img/logo-circle.png') }}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ asset('assets/img/denning-logo.ico') }}" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -219,7 +219,7 @@
             const date = now.toLocaleDateString(['en-US'], { day: 'numeric', month: 'long', year: 'numeric' });
             const time = now.toLocaleTimeString();
 
-            document.getElementById('currentDateTime').innerText = `${day}, ${date}  ${time}`;
+            document.getElementById('currentDateTime').innerText = `${day} | ${date} | ${time}`;
         }
 
         updateDateTime();

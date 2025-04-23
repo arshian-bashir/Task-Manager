@@ -117,7 +117,13 @@ class RoutineController extends Controller
     
         $routine->update($routineData);
     
-        return redirect()->route('routines.index')->with('success', 'Routine updated successfully.');
+        if (auth()->user()->role == 1) 
+        {
+            return redirect()->route('routines.index')->with('success', 'Routine updated successfully.');
+        } 
+        else {
+            return redirect()->route('routines.employee_show',  $routine->id )->with('success', 'Routine updated successfully.');
+        }    
     }
 
     public function destroy(Routine $routine)
@@ -169,5 +175,11 @@ class RoutineController extends Controller
             ->where('frequency', 'monthly')
             ->get();
         return view('routines.employee_index', compact('upcomingDailyRoutines','upcomingWeeklyRoutines','upcomingMonthlyRoutines'));
+    }
+    public function employee_show(Request $request, $routine)
+    {
+        $routine = Routine::find($routine);
+
+        return view('routines.employee_show', compact('routine'));
     }
 }

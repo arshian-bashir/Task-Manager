@@ -23,22 +23,6 @@
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
-                    <div class="mb-3">
-                        <label for="description" class="form-label">Description</label>
-                        <textarea name="description" id="description" class="form-control"></textarea>
-                        @error('description')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="mb-3">
-                        <label for="description" class="form-label">Description</label>
-                        <textarea name="description" id="description" class="form-control"></textarea>
-                        @error('description')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-
-                    
                     <button type="submit" class="btn btn-primary">Create</button>
                 </form>
             </div>

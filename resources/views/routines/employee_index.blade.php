@@ -13,12 +13,12 @@
         <div class="col-md-4">
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
-                    <h3>Daily Routines</h3>
+                    <h2>Daily Routines</h2>
                     <div class="kanban-column">
                         @forelse($upcomingDailyRoutines as $routine)
                             <div class="card mb-3">
                                 <div class="card-body">
-                                    <h5 class="card-title">{{ $routine->title }}</h5>
+                                    <h5 class="card-title"><strong>{{ $routine->title }}</strong></h5>
                                     <p class="card-text">{{ $routine->description }}</p>
                                     <p class="card-text"><strong>Days:</strong>
                                     {{ implode(', ', array_map('ucfirst', json_decode($routine->days, true) ?? [])) }}
@@ -42,7 +42,7 @@
         <div class="col-md-4">
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
-                    <h3>Weekly Routines</h3>
+                    <h2>Weekly Routines</h2>
                     <div class="kanban-column">
                         @forelse($upcomingWeeklyRoutines as $routine)
                             <div class="card mb-3">
@@ -71,7 +71,7 @@
         <div class="col-md-4">
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
-                    <h3>Monthly Routines</h3>
+                    <h2>Monthly Routines</h2>
                     <div class="kanban-column">
                         @forelse($upcomingMonthlyRoutines as $routine)
                             <div class="card mb-3">

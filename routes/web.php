@@ -45,6 +45,7 @@ Route::middleware(['auth', 'checkRole:1'])->group(function () {
     Route::get('tasks/{task}', [TaskController::class, 'show'])->name('tasks.show');
     Route::put('tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
     Route::post('/projects/tasks/{task}/update-status', [TaskController::class, 'updateStatus']);
+    Route::post('/comment_update', [TaskController::class, 'commment_update'])->name('tasks.commment_update');
     
     Route::resource('routines', RoutineController::class)->except(['show']);
     Route::get('routines/showAll', [RoutineController::class, 'showAll'])->name('routines.showAll');
@@ -63,6 +64,8 @@ Route::middleware(['auth', 'checkRole:1'])->group(function () {
     Route::post('users', [UserController::class, 'store'])->name('users.store');
 
     Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::post ('reports/create', [ReportController::class, 'create'])->name('reports.create');
+    // Route::get('reports/show', [ReportController::class, 'show'])->name('reports.show');
 });
 
 Route::middleware(['auth', 'checkRole:2'])->group(function () {
@@ -74,8 +77,14 @@ Route::middleware(['auth', 'checkRole:2'])->group(function () {
     Route::get('/emp-tasks', [TaskController::class, 'employee_show'])->name('tasks.employee_show');
     Route::get('/emp-depart-tasks', [TaskController::class, 'employee_depart_tasks'])->name('employee_depart_tasks');
     Route::get('/emp-tasks/{task}', [TaskController::class, 'employee_task_show'])->name('tasks.employee_task_show');
+
     Route::get('/emp-routines', [RoutineController::class, 'employee_index'])->name('routines.employee_index');
+    Route::get('emp-routines/{routine}', [RoutineController::class, 'employee_show'])->name('routines.employee_show');
+    Route::put('emp-routines/{routine}', [RoutineController::class, 'update'])->name('employee_routines.update');
+
     Route::put('emp-tasks/{task}/update', [TaskController::class, 'update'])->name('tasks.employee_update');
     Route::post('emp-tasks-create/{project}', [TaskController::class, 'store'])->name('tasks.employee_task_create');
+    
+    Route::post('/emp-comment_update', [TaskController::class, 'employee_commment_update'])->name('tasks.employee_commment_update');
 
 });

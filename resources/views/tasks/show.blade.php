@@ -12,7 +12,7 @@
             </div>
         @endif
         <div class="row justify-content-center">
-            <div class="col-md-8">
+            <div class="col-md-10">
                 <div class="card mb-4 shadow-sm">
                     <div class="card-body">
                         <div class="row">
@@ -54,7 +54,7 @@
                                     <i class="bi bi-arrow-90deg-left"></i> </a>
                             </div>
 
-                            <div class="col-md-6 border-start">
+                            <!-- <div class="col-md-6 border-start">
                                 <h5>Time Tracker</h5>
                                 <div id="time-tracker">
                                     <span id="time-display">00:00:00</span>
@@ -66,8 +66,29 @@
                                         <button id="reset-btn" class="btn btn-danger btn-sm"><i
                                                 class="bi bi-stop-fill"></i></button>
                                     </div>
+                                </div> -->
+
+                            <div class="col-md-6 border-start">
+                                <h5>Comments</h5>
+                                <div class="mb-0" style="max-height: 300px; overflow-y: auto;">
+                                    @forelse($messages as $message)
+                                        <div class="border p-2 mb-2 rounded bg-light">
+                                            <p class="mb-0"><strong>{{ $message->user->name ?? 'Unknown User' }} :</strong>
+                                                {{ $message->message }}</p>
+                                            <small class="text-muted">{{ $message->created_at->format('d M Y, h:i A') }}</small>
+                                        </div>
+                                    @empty
+                                        <p class="text-muted">No comments yet.</p>
+                                    @endforelse
+                                </div>
+                                <div class="mt-auto">
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                            data-bs-target="#addCommentModal-{{ $task->id }}">
+                                        <i class="bi bi-chat-left-text"></i>
+                                    </button>
                                 </div>
                             </div>
+                            
                             <div class="col-md-12 mt-3">
                                 <div class="d-flex justify-content-between align-items-center border-top pt-2">
                                     <h5>Checklist</h5>
@@ -247,6 +268,37 @@
             </div>
         </div>
     </div>
+
+    
+<!-- Add Comment Modal -->
+<div class="modal fade" id="addCommentModal-{{ $task->id }}" tabindex="-1" aria-labelledby="addCommentModalLabel-{{ $task->id }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <form action="{{ route('tasks.commment_update') }}" method="POST">
+            @csrf
+            <input type="hidden" name="task_id" value="{{ $task->id }}">
+            <input type="hidden" name="user_id" value="{{ Auth::id() }}">
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addCommentModalLabel-{{ $task->id }}">Add Comment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="message" class="form-label">Comment</label>
+                        <textarea class="form-control" name="message" rows="2" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary"
+                            data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit Comment</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 
     <script>
         let timer;

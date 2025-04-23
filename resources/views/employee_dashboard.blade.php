@@ -38,7 +38,6 @@
         max-width: 100%;
         height: auto;
         max-height: 230px;
-
     }
 </style>
     <div class="container">
@@ -87,7 +86,7 @@
             </div>
         </div>
 
-        <div class="row mb-4">
+        <div class="row">
             <div class="col-md-12 mb-4">
                 <div class="card shadow-sm h-100">
                     <div class="card-body d-flex flex-column">
@@ -154,12 +153,47 @@
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title">Tasks Due today</h5>
                         <ul class="list-group flex-grow-1">
-                        @foreach($dueToady as $task)
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                {{ $task->title }}
-                                <span class="badge bg-secondary">{{ \Carbon\Carbon::parse($task->due_date)->format('d M, Y') }}</span>
-                            </li>
-                        @endforeach
+                            <table class="table table-bordered align-middle">
+                            @foreach($dueToday as $task)
+                                <tbody>
+                                    <tr>
+                                        <td  style="width: 62%; text-align: left;">
+                                            <div class="d-flex justify-content-between align-items-start" style="flex-wrap: wrap;">
+                                                <div style="flex: 1 1 0%; min-width: 0; word-wrap: break-word; white-space: normal;">
+                                                    <strong>{{ $task->title }}</strong>
+                                                </div>
+                                                <a href="{{ route('tasks.employee_task_show', $task->id) }}" class="btn btn-primary btn-sm ms-2 mt-1" target="_blank">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                        <td style="width: 10%; text-align: right;">
+                                            <span class="badge 
+                                                {{ $task->priority == 'low' ? 'bg-success' : 
+                                                ($task->priority == 'medium' ? 'bg-warning text-dark' : 'bg-danger') }}">
+                                               {{ ucfirst($task->priority) }}
+                                            </span>
+                                        </td>
+                                        <td style="width: 10%; text-align: right;">
+                                            @if ($task->status == 'completed')
+                                                <span class="badge bg-success" title="Completed">Completed</span>
+                                            @elseif ($task->status == 'to_do')
+                                                <span class="badge bg-primary" title="To Do">To Do</span>
+                                            @elseif ($task->status == 'in_progress')
+                                                <span class="badge bg-warning text-dark" title="In Progress">In Progress</span>
+                                            @else
+                                                <span class="badge bg-secondary">{{ strtoupper(substr($task->status, 0, 1)) }}</span>
+                                            @endif
+                                        </td>
+                                        <td style="text-align: right;">
+                                            <span class="badge bg-secondary">
+                                                {{ \Carbon\Carbon::parse($task->due_date)->format('d M, Y') }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            @endforeach
+                            </table>
                         </ul>
                     </div>
                 </div>
@@ -169,12 +203,48 @@
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title">Task over due</h5>
                         <ul class="list-group flex-grow-1">
+                        <table class="table table-bordered align-middle">
                             @foreach($overdueTasks as $task)
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    {{ $task->title }}
-                                    <span class="badge bg-danger rounded-pill">{{ \Carbon\Carbon::parse($task->due_date)->format('d M, Y') }}</span>
-                                </li>
+                                <tbody>
+                                    <tr>
+                                        <td style="width: 62%; text-align: left;">
+                                        <div class="d-flex justify-content-between align-items-start" style="flex-wrap: wrap;">
+                                            <div style="flex: 1 1 0%; min-width: 0; word-wrap: break-word; white-space: normal;">
+                                                <strong>{{ $task->title }}</strong>
+                                            </div>
+                                            <a href="{{ route('tasks.employee_task_show', $task->id) }}" class="btn btn-primary btn-sm ms-2 mt-1" target="_blank">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                        </div>
+
+                                        </td>
+                                        <td style="width: 10%; text-align: right;">
+                                            <span class="badge 
+                                                {{ $task->priority == 'low' ? 'bg-success' : 
+                                                ($task->priority == 'medium' ? 'bg-warning text-dark' : 'bg-danger') }}">
+                                               {{ ucfirst($task->priority) }}
+                                            </span>
+                                        </td>
+                                        <td style="width: 10%; text-align: right;">
+                                            @if ($task->status == 'completed')
+                                                <span class="badge bg-success" title="Completed">Completed</span>
+                                            @elseif ($task->status == 'to_do')
+                                                <span class="badge bg-primary" title="To Do">To Do</span>
+                                            @elseif ($task->status == 'in_progress')
+                                                <span class="badge bg-warning text-dark" title="In Progress">In Progress</span>
+                                            @else
+                                                <span class="badge bg-secondary">{{ strtoupper(substr($task->status, 0, 1)) }}</span>
+                                            @endif
+                                        </td>
+                                        <td style="text-align: right;">
+                                            <span class="badge bg-secondary">
+                                                {{ \Carbon\Carbon::parse($task->due_date)->format('d M, Y') }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </tbody>
                             @endforeach
+                            </table>
                         </ul>
                     </div>
                 </div>
@@ -187,10 +257,16 @@
                             @foreach($todayRoutines as $routine)
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                     {{ $routine->title }}
-                                    <span class="badge bg-primary rounded-pill">{{ $routine->frequency }}</span>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="badge bg-primary rounded-pill">{{ $routine->frequency }}</span>
+                                        <a href="{{ route('routines.employee_show', $routine->id) }}" class="btn btn-primary" target="_blank">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                    </div>
                                 </li>
                             @endforeach
                         </ul>
+
                         <br>
 
                         <h5 class="card-title">This month's Monthly Routines</h5>
@@ -198,7 +274,12 @@
                             @foreach($monthRoutines as $routine)
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                     {{ $routine->title }}
-                                    <span class="badge bg-primary rounded-pill">{{ $routine->frequency }}</span>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="badge bg-primary rounded-pill">{{ $routine->frequency }}</span>
+                                        <a href="{{ route('routines.employee_show', $routine->id) }}" class="btn btn-primary" target="_blank">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                    </div>
                                 </li>
                             @endforeach
                         </ul>
@@ -206,7 +287,7 @@
                 </div>
             </div>
         </div>
-        <div class="row mb-4">
+        <div class="row">
             <div class="col-md-4 mb-4">
                 <div class="card shadow-sm h-100">
                     <div class="card-body d-flex flex-column">

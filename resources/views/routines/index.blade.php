@@ -39,8 +39,7 @@
                                                 onsubmit="return confirm('Are you sure you want to delete this routine?');">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger"><i
-                                                        class="bi bi-trash"></i></button>
+                                                <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i></button>
                                             </form>
                                         </div>
                                     </div>
@@ -70,13 +69,13 @@
                                         <p class="card-text"><strong>Weeks:</strong>
                                             {{ implode(', ', json_decode($routine->weeks, true) ?? []) }}</p>
                                         <div class="d-flex justify-content-between">
-                                            <a href="{{ route('routines.edit', $routine->id) }}"
-                                                class="btn btn-warning">Edit</a>
+                                            <a href="{{ route('routines.edit', $routine->id) }}" class="btn btn-warning"><i
+                                            class="bi bi-pencil"></i></a>
                                             <form action="{{ route('routines.destroy', $routine->id) }}" method="POST"
                                                 onsubmit="return confirm('Are you sure you want to delete this routine?');">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                                <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i></button>
                                             </form>
                                         </div>
                                     </div>
@@ -115,13 +114,13 @@
                                             {{ $routine->project->name ?? 'No Department' }}
                                         </p>
                                         <div class="d-flex justify-content-between">
-                                            <a href="{{ route('routines.edit', $routine->id) }}"
-                                                class="btn btn-warning">Edit</a>
+                                            <a href="{{ route('routines.edit', $routine->id) }}" class="btn btn-warning"><i
+                                            class="bi bi-pencil"></i></a>
                                             <form action="{{ route('routines.destroy', $routine->id) }}" method="POST"
                                                 onsubmit="return confirm('Are you sure you want to delete this routine?');">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                                <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i></button>
                                             </form>
                                         </div>
                                     </div>

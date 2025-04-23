@@ -83,6 +83,8 @@ class LoginController extends Controller
     {
       
         $user = Auth::user();
+
+        $projects = Project::all();
         $tasksCount = $user->tasks()->count();
         $routinesCount = $user->routines()->count();
         $notesCount = $user->notes()->count();
@@ -95,9 +97,28 @@ class LoginController extends Controller
         $dueToday = Task::where('due_date', Carbon::today())->get();
         $overdueTasks = Task::where('due_date', '<', Carbon::today())->get();
 
+        $projectTasksToDo = Project::withCount([
+            'tasks as task_count' => function ($q) {
+                $q->where('status', 'to_do');
+            }
+            ])->get(['name'])
+            ->mapWithKeys(function ($project) {
+                return [$project->name => $project->task_count];
+        });
+
+        $projectTasksInProgress = Project::withCount([
+            'tasks as task_count' => function ($q) {
+                $q->where('status', 'in_progress');
+            }
+            ])->get(['name'])
+            ->mapWithKeys(function ($project) {
+                return [$project->name => $project->task_count];
+        });
+                
         $upcomingReminders = $user->reminders()->where('date', '>=', now())->orderBy('date')->take(5)->get();
 
         return view('dashboard', compact(
+            'projects',
             'tasksCount', 
             'routinesCount', 
             'notesCount', 
@@ -108,6 +129,8 @@ class LoginController extends Controller
             'overdueTasks', 
             'todayRoutines', 
             'recentNotes', 
+            'projectTasksToDo',
+            'projectTasksInProgress',
             'upcomingReminders'
         ));
     }
@@ -131,7 +154,7 @@ class LoginController extends Controller
         
         $allTasks = Task::whereRaw("FIND_IN_SET(?, user_id)", [$userId])->where('project_id', $userProjectId)->get();
 
-        $dueToady = Task::whereRaw("FIND_IN_SET(?, user_id)", [$userId])
+        $dueToday = Task::whereRaw("FIND_IN_SET(?, user_id)", [$userId])
             ->where('project_id', $userProjectId)
             ->where('due_date', Carbon::today())
             ->get();
@@ -166,7 +189,6 @@ class LoginController extends Controller
 
         $prioritiesCount = $tasks->pluck('priority')->countBy();
 
-
         return view('employee_dashboard', compact(
             'userProject',
             'tasksCount', 
@@ -176,7 +198,7 @@ class LoginController extends Controller
             'remindersCount',
             'filesCount', 
             'allTasks',
-            'dueToady',
+            'dueToday',
             'overdueTasks',
             'todayRoutines', 
             'monthRoutines',

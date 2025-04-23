@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Models\TaskMessage;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -44,8 +45,9 @@ class TaskController extends Controller
     }
 
     public function show(Task $task)
-    {
-        return view('tasks.show', compact('task'));
+    {   
+        $messages = TaskMessage::where('task_id', $task->id )->orderby('id')->get();
+        return view('tasks.show', compact('task', 'messages'));
     }
 
     public function update(Request $request, Task $task)
@@ -59,9 +61,7 @@ class TaskController extends Controller
 
         ]);
 
-        $task = Task::findOrFail($request->id); 
         $task->update($request->all()); 
-
 
         return redirect()->route('projects.tasks.index', $task->project_id)->with('success', 'Task updated successfully.');
     }
@@ -109,7 +109,8 @@ class TaskController extends Controller
 
     public function employee_task_show(Task $task, Request $request)
     {   
-        return view('tasks.employee_task_show', compact('task'));
+        $messages = TaskMessage::where('task_id', $task->id )->orderby('id')->get();
+        return view('tasks.employee_task_show', compact('task', 'messages'));
     }
 
     public function employee_depart_tasks(Request $request)
@@ -124,6 +125,40 @@ class TaskController extends Controller
         $tasksList = Task::where('project_id', $userProjectId)->get()->groupBy('status');
 
         return view('tasks.employee_project_tasks', compact('tasksList','projectUsers','project'));
+    }
+
+    public function commment_update(Request $request)
+    {   
+        $request->validate([
+            'task_id'    => 'required|exists:tasks,id',
+            'user_id'    => 'required|exists:users,id',
+            'message'    => 'required|string|max:1000',
+        ]);
+
+        TaskMessage::create([
+            'task_id' => $request->task_id,
+            'user_id' => $request->user_id,
+            'message' => $request->message,
+        ]);
+
+        return redirect()->route('tasks.show', $request->task_id);
+    }
+
+    public function employee_commment_update(Request $request)
+    {   
+        $request->validate([
+            'task_id'    => 'required|exists:tasks,id',
+            'user_id'    => 'required|exists:users,id',
+            'message'    => 'required|string|max:1000',
+        ]);
+
+        TaskMessage::create([
+            'task_id' => $request->task_id,
+            'user_id' => $request->user_id,
+            'message' => $request->message,
+        ]);
+
+        return redirect()->route('tasks.employee_task_show', $request->task_id);
     }
 
 }

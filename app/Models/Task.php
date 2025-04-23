@@ -49,4 +49,9 @@ class Task extends Model
         $ids = array_filter(explode(',', $this->user_id));
         return User::whereIn('id', $ids)->get();
     }
+    
+    public function taskMessages()
+    {
+        return $this->hasMany(TaskMessage::class);
+    }
 }
