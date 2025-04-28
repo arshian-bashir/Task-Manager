@@ -11,6 +11,7 @@ class FileController extends Controller
     public function index()
     {
         $files = Auth::user()->files()->latest()->get();
+        //dd($files);
         return view('files.index', compact('files'));
     }
 

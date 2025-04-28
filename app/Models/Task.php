@@ -54,4 +54,8 @@ class Task extends Model
     {
         return $this->hasMany(TaskMessage::class);
     }
+    public function files()
+    {
+        return $this->hasMany(File::class);
+    }
 }

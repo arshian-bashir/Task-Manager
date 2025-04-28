@@ -17,13 +17,15 @@ class CheckRole
     public function handle(Request $request, Closure $next, $role): Response
     {   
 
-        $user = auth()->user();
-
-        if (!$user || (int)$user->role !== (int)$role) {
-
+        if (!$request->user()) {
+            // If user not logged in, skip role checking
+            return $next($request);
+        }
+    
+        if ((int)$request->user()->role !== (int)$role) {
             return redirect('emp-dash');
         }
-
+    
         return $next($request);
     }
 }

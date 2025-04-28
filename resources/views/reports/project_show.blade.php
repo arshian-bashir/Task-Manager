@@ -52,9 +52,9 @@
 
 <div class="container">
     <div class="bg-white mb-4 shadow-sm p-3 rounded">
-        <h2 class="mb-1"><strong>{{ $project->name }} - Department</strong></h2>
+        <h3 class="mb-1"><strong>Department : </strong>{{ $project->name }}</h3>
         <br>
-        <h5 class="mb-0 text-muted">{{ $project->description }}</h5>
+        <h6 class="mb-0 text-muted">{{ $project->description }}</h6>
     </div>
 
     <div class="row">
@@ -71,6 +71,24 @@
             <div class="card shadow-sm h-100">
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title">Total Users</h5>
+                    <br>
+                    <h3 class="card-text flex-grow-1"><strong>{{ $usersCount }}</strong></h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Daily Routines</h5>
+                    <br>
+                    <h3 class="card-text flex-grow-1"><strong>{{ $usersCount }}</strong></h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Monthly Routines</h5>
                     <br>
                     <h3 class="card-text flex-grow-1"><strong>{{ $usersCount }}</strong></h3>
                 </div>

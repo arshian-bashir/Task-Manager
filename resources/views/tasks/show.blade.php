@@ -41,13 +41,24 @@
 
                                     @if($users->isNotEmpty())
                                         @foreach($users as $user)
+                                        <a href="#" onclick="submitEmployeeReport({{ $user->id }})">
                                             <span class="badge bg-info">{{ $user->name }}</span>
+                                        </a>
                                         @endforeach
                                     @else
                                         <span class="text-muted">Unassigned</span>
                                     @endif
                                 </p>
-
+                                @if($files->isNotEmpty())
+                                    <p class="card-text"><strong>File:</strong>
+                                    
+                                        @foreach($files as $file)
+                                            <a href="{{ asset('storage/' . $file->path) }}" target="_blank">{{ $file->name }}</a><br>
+                                        @endforeach
+                                    </p>
+                                @else
+                                    <p class="card-text text-muted">No File Uploaded</p>
+                                @endif
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                     data-bs-target="#editTaskModal"> <i class="bi bi-pencil-square"></i> </button>
                                 <a href="{{ route('projects.tasks.index', $task->project->id) }}" class="btn btn-secondary">
@@ -201,7 +212,7 @@
             aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form action="{{ route('tasks.update', $task->id) }}" method="POST">
+                    <form action="{{ route('tasks.update', $task->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
                         <div class="modal-header">
@@ -258,6 +269,13 @@
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
+                            <div class="mb-3">
+                                <label for="file" class="form-label">Choose File</label>
+                                <input type="file" name="file" id="file" class="form-control">
+                                @error('file')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -301,47 +319,31 @@
 </div>
 
     <script>
-        let timer;
-        let seconds = 0;
-        let isRunning = false;
 
-        function formatTime(sec) {
-            let hours = Math.floor(sec / 3600);
-            let minutes = Math.floor((sec % 3600) / 60);
-            let seconds = sec % 60;
-
-            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        }
-
-        function updateTimeDisplay() {
-            document.getElementById('time-display').innerText = formatTime(seconds);
-        }
-
-        document.getElementById('start-btn').addEventListener('click', () => {
-            if (!isRunning) {
-                isRunning = true;
-                timer = setInterval(() => {
-                    seconds++;
-                    updateTimeDisplay();
-                }, 1000);
+            function submitEmployeeReport(userId) {
+                const url = '{{ route('reports.employee_create') }}'; 
+                
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}', // Send Laravel CSRF token here
+                    },
+                    body: JSON.stringify({ user_id: userId })
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error("Request failed");
+                    return response.text(); 
+                })
+                .then(html => {
+                    console.log("Success!", html);
+                    window.location.href = '/reports/employee'; 
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                });
             }
-        });
 
-        document.getElementById('pause-btn').addEventListener('click', () => {
-            if (isRunning) {
-                isRunning = false;
-                clearInterval(timer);
-            }
-        });
-
-        document.getElementById('reset-btn').addEventListener('click', () => {
-            isRunning = false;
-            clearInterval(timer);
-            seconds = 0;
-            updateTimeDisplay();
-        });
-
-        updateTimeDisplay();
 
         function toggleChecklistItem(itemId) {
             const url = '{{ route('checklist-items.update-status', ':id') }}'.replace(':id', itemId);
@@ -429,4 +431,6 @@
                 .catch(error => console.error('Error:', error));
         });
     </script>
+
+
 @endsection

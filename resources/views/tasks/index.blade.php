@@ -120,7 +120,7 @@
             aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form action="{{ route('projects.tasks.store', $project->id) }}" method="POST">
+                    <form action="{{ route('projects.tasks.store', $project->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="modal-header">
                             <h5 class="modal-title" id="createTaskModalLabel">Create Task</h5>
@@ -159,6 +159,15 @@
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
+
+                            <div class="mb-3">
+                                <label for="file" class="form-label">Choose File</label>
+                                <input type="file" name="file" id="file" class="form-control">
+                                @error('file')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+
                             <div class="dropdown">
                                 <button class="btn btn-primary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                     Assign Users
@@ -177,6 +186,7 @@
                                     @endforeach
                                 </ul>
                             </div>
+
                             <input type="hidden" name="status" id="task_status">
 
                         </div>

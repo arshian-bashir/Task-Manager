@@ -48,6 +48,16 @@
                                         <span class="text-muted">Unassigned</span>
                                     @endif
                                 </p>
+                                @if($files->isNotEmpty())
+                                    <p class="card-text"><strong>File:</strong>
+                                    
+                                        @foreach($files as $file)
+                                            <a href="{{ asset('storage/' . $file->path) }}" target="_blank">{{ $file->name }}</a><br>
+                                        @endforeach
+                                    </p>
+                                @else
+                                    <p class="card-text text-muted">No File Uploaded</p>
+                                @endif
                                 <button type="button" class="btn btn-success" data-bs-toggle="modal"
                                         data-bs-target="#editTaskModal-{{ $task->id }}">
                                         <i class="bi bi-pencil-square"></i>
@@ -89,7 +99,7 @@
     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="{{ route('tasks.employee_update', $task->id) }}" method="POST">
+            <form action="{{ route('tasks.employee_update', $task->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
@@ -149,6 +159,13 @@
                         </select>
                         @error('status')
                             <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="file" class="form-label">Choose File</label>
+                        <input type="file" name="file" id="file" class="form-control">
+                        @error('file')
+                           <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                 </div>

@@ -15,8 +15,9 @@ class LoginController extends Controller
     /**
      * Show the login form.
      */
-    public function showLoginForm()
+    public function showLoginForm(Request $request)
     {
+       
         return view('auth.login');
     }
 
@@ -29,8 +30,6 @@ class LoginController extends Controller
             'email' => 'required|string|email|max:255',
             'password' => 'required|string|min:6',
         ]);
-
-        $user = Auth::user();
         
         $credentials = $request->only('email', 'password');
         $remember = $request->filled('remember'); // Check if remember me is checked
@@ -42,8 +41,6 @@ class LoginController extends Controller
             // Get the authenticated user
             $user = Auth::user();
 
-            
-            
 
             // Check the user's role
             if ($user->role === 1) {
@@ -57,8 +54,6 @@ class LoginController extends Controller
     
             return redirect()->route('login')->withErrors(['Unauthorized role.']);
         }
-    
-
 
         return back()->withErrors([
             'email' => __('Invalid email or password. Please try again.'), // More user-friendly error

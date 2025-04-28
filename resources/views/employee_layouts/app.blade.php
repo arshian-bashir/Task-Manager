@@ -110,7 +110,7 @@
         <h4 class="mb-4 text-center">
             <a href="{{ route('employee_dashboard') }}">
                 <img style=" filter: invert(100%) brightness(200%);"
-                    src="{{ asset('assets/img/logo-circle-horizontal.png') }}" class="img-fluid" width="100%"
+                    src="{{ asset('assets/img/denning_logo_black.png') }}" class="img-fluid" width="100%"
                     alt="task manager">
             </a>
         </h4>

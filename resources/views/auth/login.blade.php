@@ -2,9 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome to Task Manager</title>
-    <link rel="shortcut icon" href="{{ asset('assets/img/logo-circle.png') }}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ asset('assets/img/denning-logo.ico') }}" type="image/x-icon">
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -66,16 +68,16 @@
             <div class="card border-0 shadow-sm">
                 <!-- Header -->
                 <div class="card-header text-center p-3 d-flex align-items-center justify-content-center">
-                    <img src="{{ asset('assets/img/logo-horizontal.png') }}" class="img-fluid" alt="Task Manager Logo">
+                    <img src="{{ asset('assets/img/denning_logo_black.png') }}" class="img-fluid" alt="Task Manager Logo">
                 </div>
 
                 <!-- Login Form -->
                 <div class="card-body p-4">
-                    <form method="POST" action="{{ route('login') }}">
+                    <form method="POST" action="{{ route('login.post') }}">
                         @csrf
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
-                            <input type="email" name="email" id="email" class="form-control" placeholder="admin@example.com" required autofocus>
+                            <input type="email" name="email" id="email" class="form-control" placeholder="admin@example.com" required>
                             @error('email')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -108,6 +110,7 @@
         </div>
     </div>
 </div>
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

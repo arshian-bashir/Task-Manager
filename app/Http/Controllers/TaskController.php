@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Models\File;
 use App\Models\TaskMessage;
 use App\Models\Task;
 use App\Models\User;
@@ -31,8 +32,8 @@ class TaskController extends Controller
         ]);
        
         $userIds = implode(',', (array) $request->user_id);
-        
-        $project->tasks()->create([
+
+        $task = $project->tasks()->create([
             'user_id' => $userIds,
             'title' => $request->title,
             'description' => $request->description,
@@ -40,6 +41,19 @@ class TaskController extends Controller
             'status' => $request->status,
             'priority' => $request->priority,
         ]);
+        
+        if ($request->hasFile('file')) {
+            $filePath = $request->file('file')->store('uploads', 'public');
+            
+            File::create([
+                'task_id' => $task->id,
+                'project_id' => $project->id,
+                'user_id' => auth()->id(),
+                'name' => $request->file('file')->getClientOriginalName(),
+                'path' => $filePath,
+                'type' => 'project',
+            ]);
+        }
 
         return redirect()->route('projects.tasks.index', $project)->with('success', 'Task created successfully.');
     }
@@ -47,7 +61,8 @@ class TaskController extends Controller
     public function show(Task $task)
     {   
         $messages = TaskMessage::where('task_id', $task->id )->orderby('id')->get();
-        return view('tasks.show', compact('task', 'messages'));
+        $files = File::where('task_id', $task->id )->get();
+        return view('tasks.show', compact('task', 'messages', 'files'));
     }
 
     public function update(Request $request, Task $task)
@@ -62,6 +77,20 @@ class TaskController extends Controller
         ]);
 
         $task->update($request->all()); 
+
+        if ($request->hasFile('file')) {
+
+            $filePath = $request->file('file')->store('uploads', 'public');
+        
+            File::create([
+                'task_id' => $task->id,
+                'project_id' => $task->project_id,
+                'user_id' => auth()->id(),
+                'name' => $request->file('file')->getClientOriginalName(),
+                'path' => $filePath,
+                'type' => 'project',
+            ]);
+        }
 
         return redirect()->route('projects.tasks.index', $task->project_id)->with('success', 'Task updated successfully.');
     }
@@ -110,7 +139,8 @@ class TaskController extends Controller
     public function employee_task_show(Task $task, Request $request)
     {   
         $messages = TaskMessage::where('task_id', $task->id )->orderby('id')->get();
-        return view('tasks.employee_task_show', compact('task', 'messages'));
+        $files = File::where('task_id', $task->id )->get();
+        return view('tasks.employee_task_show', compact('task', 'messages', 'files'));
     }
 
     public function employee_depart_tasks(Request $request)

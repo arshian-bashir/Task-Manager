@@ -11,10 +11,22 @@ class File extends Model
 
     protected $fillable = [
         'user_id',
+        'task_id',
+        'project_id',
         'name',
         'path',
         'type',
     ];
+
+    public function task()
+    {
+        return $this->belongsTo(Task::class);
+    }
+
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
 
     public function user()
     {

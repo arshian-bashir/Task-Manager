@@ -15,13 +15,16 @@
             data-bs-target="#createEmployeeReport" data-status="completed" style="padding-top: 0.5rem; padding-bottom: 0.5rem;">View Employee Report</button>
         </div>
     </div>    
-
+   
+</div>
 
     <div class="modal fade" id="createDepartmentReport" tabindex="-1" aria-labelledby="createDepartmentReportLabel"
             aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form action="{{ route('reports.create') }}" method="POST">
+
+                    <form id="projectForm" action="{{ route('reports.project_create') }}" method="POST">
+
                         @csrf
                         <div class="modal-header">
                             <h5 class="modal-title" id="createDepartmentReportLabel">Create Task</h5>
@@ -54,7 +57,45 @@
                 </div>
             </div>
     </div>
+    
+    
+    <div class="modal fade" id="createEmployeeReport" tabindex="-1" aria-labelledby="createEmployeeReportLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="{{ route('reports.employee_create') }}" method="POST">
+                        @csrf
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="createEmployeeReportLabel">Create Task</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
 
-</div>
+
+                            <div class="mb-3">
+                                <label for="user_id" class="form-label">Employee</label>
+                                <select name="user_id" id="user_id" class="form-select" required>
+                                    <option selected disabled value="0"> -- Select Employee -- </option>
+                                    @foreach($users as $user)
+                                        <option value="{{ $user->id }}">{{ $user-> name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('priority')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Create Report</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+    </div>
+
 
 @endsection

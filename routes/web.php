@@ -18,15 +18,13 @@ use App\Http\Middleware\CheckRole;
 
 
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
-Route::post('login', [LoginController::class, 'login']);
+Route::post('login', [LoginController::class, 'login'])->name('login.post');
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
-
 
 
 Route::middleware(['auth', 'checkRole:1'])->group(function () {
 
     Route::get('/', [LoginController::class, 'dashboard'])->name('dashboard');
-
  
     Route::controller(MailController::class)->prefix('mail')->name('mail.')->group(function () {
         Route::get('/', 'index')->name('inbox');    
@@ -64,7 +62,11 @@ Route::middleware(['auth', 'checkRole:1'])->group(function () {
     Route::post('users', [UserController::class, 'store'])->name('users.store');
 
     Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
-    Route::post ('reports/create', [ReportController::class, 'create'])->name('reports.create');
+    Route::post ('reports/project', [ReportController::class, 'project_create'])->name('reports.project_create');
+    Route::post('reports/employee', [ReportController::class, 'employee_create'])->name('reports.employee_create');
+
+    Route::post('reports/employee', [ReportController::class, 'employee_create'])->name('reports.employee_create');
+
     // Route::get('reports/show', [ReportController::class, 'show'])->name('reports.show');
 });
 
