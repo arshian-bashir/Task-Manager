@@ -45,9 +45,9 @@ class User extends Authenticatable
     /**
      * Get the projects for the user.
      */
-    public function projects()
+    public function project()
     {
-        return $this->hasMany(Project::class);
+        return $this->belongsTo(Project::class, 'project_id');
     }
 
     /**
@@ -95,9 +95,9 @@ class User extends Authenticatable
     {
         return Task::whereRaw("FIND_IN_SET(?, user_id)", [$this->id]);
     }
-    public function project()
+    public function headedProjects()
     {
-        return $this->belongsTo(Project::class);
+        return $this->hasMany(Project::class, 'hod_id');
     }
     public function taskMessages()
     {

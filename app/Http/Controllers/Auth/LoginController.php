@@ -17,7 +17,6 @@ class LoginController extends Controller
      */
     public function showLoginForm(Request $request)
     {
-       
         return view('auth.login');
     }
 
@@ -76,21 +75,16 @@ class LoginController extends Controller
 
     public function dashboard(Request $request)
     {
-      
         $user = Auth::user();
-
+        $tasks = Task::all();
         $projects = Project::all();
-        $tasksCount = $user->tasks()->count();
-        $routinesCount = $user->routines()->count();
-        $notesCount = $user->notes()->count();
-        $remindersCount = $user->reminders()->count();
-        $filesCount = $user->files()->count();
-        $recentTasks = $user->tasks()->latest()->take(5)->get();
+        $routines = Routine::all();
         $todayRoutines = $user->routines()->whereDate('start_time', now())->get();
-        $recentNotes = $user->notes()->latest()->take(5)->get();
 
         $dueToday = Task::where('due_date', Carbon::today())->get();
-        $overdueTasks = Task::where('due_date', '<', Carbon::today())->get();
+        $overdueTasks = Task::where('due_date', '<', Carbon::today())
+            ->whereIn('status', ['to_do', 'in_progress'])
+            ->get();
 
         $projectTasksToDo = Project::withCount([
             'tasks as task_count' => function ($q) {
@@ -113,17 +107,12 @@ class LoginController extends Controller
         $upcomingReminders = $user->reminders()->where('date', '>=', now())->orderBy('date')->take(5)->get();
 
         return view('dashboard', compact(
+            'tasks',
+            'routines',
             'projects',
-            'tasksCount', 
-            'routinesCount', 
-            'notesCount', 
-            'remindersCount',
-            'filesCount', 
-            'recentTasks',
             'dueToday',
             'overdueTasks', 
             'todayRoutines', 
-            'recentNotes', 
             'projectTasksToDo',
             'projectTasksInProgress',
             'upcomingReminders'

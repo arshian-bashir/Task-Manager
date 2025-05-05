@@ -3,8 +3,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use App\Models\User;
+use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class ProjectController extends Controller
 {
@@ -16,17 +18,23 @@ class ProjectController extends Controller
 
     public function create()
     {
-        return view('projects.create');
+        $users = User::all();
+        return view('projects.create', compact('users'));
     }
 
     public function store(Request $request)
     {
+        
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'head_of_department' =>  'nullable|integer|exists:users,id',
         ]);
 
-        Project::create($request->all());
+        $data = $request->only(['name', 'description']);
+        $data['hod_id'] = $request->input('head_of_department');
+
+        Project::create($data);
 
         return redirect()->route('projects.index')->with('success', 'Project created successfully.');
     }
@@ -35,11 +43,16 @@ class ProjectController extends Controller
     {
         $teamMembers = $project->users()->get();
         $users = User::all();
-        return view('projects.show', compact('project', 'teamMembers', 'users'));
+        $tasksOverDue = Task::where('project_id', $project->id)
+            ->whereDate('due_date', '<', Carbon::today())
+            ->where('status', '!=', 'completed')
+            ->get();        
+        return view('projects.show', compact('project', 'teamMembers', 'users', 'tasksOverDue'));
     }
     public function edit(Project $project)
     {
-        return view('projects.edit', compact('project'));
+        $users = User::all();
+        return view('projects.edit', compact('project','users'));
     }
 
     public function update(Request $request, Project $project)
@@ -47,10 +60,13 @@ class ProjectController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-
+            'head_of_department' =>  'nullable|integer|exists:users,id',
         ]);
 
-        $project->update($request->all());
+        $data = $request->only(['name', 'description']);
+        $data['hod_id'] = $request->input('head_of_department');
+
+        $project->update($data);
 
         return redirect()->route('projects.index')->with('success', 'Project updated successfully.');
     }

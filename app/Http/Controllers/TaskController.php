@@ -19,8 +19,28 @@ class TaskController extends Controller
         return view('tasks.index', compact('project', 'tasks', 'users'));
     }
 
-    public function store(Request $request, Project $project)
+    public function create(Request $request)
     {
+        $users = User::all();
+        $projects = Project::all();
+        return view('tasks.create', compact('users', 'projects'));
+    }
+
+    public function store(Request $request)
+    {
+
+        if ($request->hasFile('file')) {
+            foreach ($request->file('file') as $fileGroup) {
+                // fileGroup can be a single file or an array of files depending on input
+                if (is_array($fileGroup)) {
+                    foreach ($fileGroup as $file) {
+                        $file->store('uploads'); // Save in default storage path
+                    }
+                } else {
+                    $fileGroup->store('uploads');
+                }
+            }
+        }
 
         $request->validate([
             'user_id' => 'required|exists:users,id',
@@ -33,6 +53,8 @@ class TaskController extends Controller
        
         $userIds = implode(',', (array) $request->user_id);
 
+        $project = Project::findOrFail($request->project);
+
         $task = $project->tasks()->create([
             'user_id' => $userIds,
             'title' => $request->title,
@@ -41,20 +63,24 @@ class TaskController extends Controller
             'status' => $request->status,
             'priority' => $request->priority,
         ]);
-        
-        if ($request->hasFile('file')) {
-            $filePath = $request->file('file')->store('uploads', 'public');
-            
-            File::create([
-                'task_id' => $task->id,
-                'project_id' => $project->id,
-                'user_id' => auth()->id(),
-                'name' => $request->file('file')->getClientOriginalName(),
-                'path' => $filePath,
-                'type' => 'project',
-            ]);
-        }
 
+
+        if ($request->hasFile('file')) {
+            foreach ($request->file('file') as $file) {
+                if ($file) {
+                    $filePath = $file->store('uploads', 'public');
+        
+                    File::create([
+                        'task_id' => $task->id,
+                        'project_id' => $project->id,
+                        'user_id' => auth()->id(),
+                        'name' => $file->getClientOriginalName(),
+                        'path' => $filePath,
+                        'type' => 'project',
+                    ]);
+                }
+            }
+        }
         return redirect()->route('projects.tasks.index', $project)->with('success', 'Task created successfully.');
     }
 
@@ -114,12 +140,10 @@ class TaskController extends Controller
 
     public function assigned(Request $request)
     {   
-        $user = Auth::user(); 
-        $tasksList = Task::whereHas('project', function ($query) use ($user) { $query->where('user_id', $user->id); })
-            ->get()->groupBy('status')
-            ->map(function ($group) { return $group->sortBy('priority'); });
-        
-        return view('tasks.assigned', compact('tasksList'));
+        $users = User::all(); 
+        $tasks = Task::all()->groupBy('status');    
+
+        return view('tasks.assigned', compact('tasks', 'users'));
     }
     public function employee_show(Request $request)
     {   

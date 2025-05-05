@@ -53,6 +53,7 @@
 <div class="container">
     <div class="bg-white mb-4 shadow-sm p-3 rounded">
         <h3 class="mb-1"><strong>Department : </strong>{{ $project->name }}</h3>
+        <h6 class="my-2 text-muted"><strong>Head of Department : </strong>{{ $project->hod?->name ?? 'No Head of Department assigned' }}</h6>
         <br>
         <h6 class="mb-0 text-muted">{{ $project->description }}</h6>
     </div>
@@ -63,10 +64,39 @@
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title">Total Tasks</h5>
                     <br>
-                    <h3 class="card-text flex-grow-1"><strong>{{ $tasksCount }}</strong></h3>
+                    <h3 class="card-text flex-grow-1"><strong>{{ $tasks->count() }}</strong></h3>
                 </div>
             </div>
         </div>
+        <div class="col-md-2 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Tasks (To Do)</h5>
+                    <br>
+                    <h3 class="card-text flex-grow-1"><strong>{{ $tasks->where('status', 'to_do')->count() }}</strong></h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Tasks (In Progress)</h5>
+                    <br>
+                    <h3 class="card-text flex-grow-1"><strong>{{ $tasks->where('status', 'in_progress')->count() }}</strong></h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Tasks (Completed)</h5>
+                    <br>
+                    <h3 class="card-text flex-grow-1"><strong>{{ $tasks->where('status', 'completed')->count() }}</strong></h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-md-2 mb-4">
             <div class="card shadow-sm h-100">
                 <div class="card-body d-flex flex-column">
@@ -81,7 +111,7 @@
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title">Daily Routines</h5>
                     <br>
-                    <h3 class="card-text flex-grow-1"><strong>{{ $usersCount }}</strong></h3>
+                    <h3 class="card-text flex-grow-1"><strong>{{ $routines->where('frequency', 'daily')->count() }}</strong></h3>
                 </div>
             </div>
         </div>
@@ -90,7 +120,7 @@
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title">Monthly Routines</h5>
                     <br>
-                    <h3 class="card-text flex-grow-1"><strong>{{ $usersCount }}</strong></h3>
+                    <h3 class="card-text flex-grow-1"><strong>{{ $routines->where('frequency', 'monthly')->count() }}</strong></h3>
                 </div>
             </div>
         </div>
@@ -182,7 +212,6 @@
                 </div>
             `).join('');
         }
-
         generateLegend4(myDonutChart4);
     });
 

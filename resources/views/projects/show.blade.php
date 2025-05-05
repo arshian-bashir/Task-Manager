@@ -65,6 +65,58 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-md-6 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">Task over due</h5>
+                        <ul class="list-group flex-grow-1">
+                        <table class="table table-bordered align-middle">
+                            @foreach($tasksOverDue as $task)
+                                <tbody>
+                                    <tr>
+                                        <td style="width: 62%; text-align: left;">
+                                        <div class="d-flex justify-content-between align-items-start" style="flex-wrap: wrap;">
+                                            <div style="flex: 1 1 0%; min-width: 0; word-wrap: break-word; white-space: normal;">
+                                                <strong>{{ $task->title }}</strong>
+                                            </div>
+                                            <a href="{{ route('tasks.show', $task->id) }}" class="btn btn-primary btn-sm ms-2 mt-1" target="_blank">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                        </div>
+
+                                        </td>
+                                        <td style="width: 10%; text-align: right;">
+                                            <span class="badge 
+                                                {{ $task->priority == 'low' ? 'bg-success' : 
+                                                ($task->priority == 'medium' ? 'bg-warning text-dark' : 'bg-danger') }}">
+                                               {{ ucfirst($task->priority) }}
+                                            </span>
+                                        </td>
+                                        <td style="width: 10%; text-align: right;">
+                                            @if ($task->status == 'completed')
+                                                <span class="badge bg-success" title="Completed">Completed</span>
+                                            @elseif ($task->status == 'to_do')
+                                                <span class="badge bg-primary" title="To Do">To Do</span>
+                                            @elseif ($task->status == 'in_progress')
+                                                <span class="badge bg-warning text-dark" title="In Progress">In Progress</span>
+                                            @else
+                                                <span class="badge bg-secondary">{{ strtoupper(substr($task->status, 0, 1)) }}</span>
+                                            @endif
+                                        </td>
+                                        <td style="text-align: right;">
+                                            <span class="badge bg-secondary">
+                                                {{ \Carbon\Carbon::parse($task->due_date)->format('d M, Y') }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            @endforeach
+                            </table>
+                        </ul>
+                    </div>
+                </div>
+            </div>
     </div>
 
     <div class="modal fade" id="addMemberModal" tabindex="-1" aria-labelledby="addMemberModalLabel" aria-hidden="true">

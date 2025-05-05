@@ -49,37 +49,70 @@
         <div class="row mb-4">
             <div class="col-md-3 mb-4">
                 <div class="card shadow-sm h-100">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">Tasks</h5>
-                        <p class="card-text flex-grow-1">You have <strong>{{ $tasksCount }}</strong> tasks pending.</p>
-                        <a href="{{ route('tasks.showall') }}" class="btn btn-primary mt-auto">View Tasks</a>
+                    <div class="card-body">
+                        <h2 class="card-title fw-bold">Tasks</h2>
+                        <table class="table table-bordered mt-3">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Status</th>
+                                    <th>Count</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>To Do</td>
+                                    <td>{{ $tasks->where('status', 'to_do')->count() }}</td>
+                                </tr>
+                                <tr>
+                                    <td>In Progress</td>
+                                    <td>{{ $tasks->where('status', 'in_progress')->count() }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Completed</td>
+                                    <td>{{ $tasks->where('status', 'completed')->count() }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
+
             <div class="col-md-3 mb-4">
                 <div class="card shadow-sm h-100">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">Routines</h5>
-                        <p class="card-text flex-grow-1">You have <strong>{{ $routinesCount }}</strong> routines scheduled today.</p>
-                        <a href="{{ route('routines.index') }}" class="btn btn-primary mt-auto">View Routines</a>
+                    <div class="card-body">
+                        <h2 class="card-title fw-bold">Routines</h2>
+                        <table class="table table-bordered mt-3">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Frequency</th>
+                                    <th>Count</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Daily</td>
+                                    <td>{{ $routines->where('frequency', 'daily')->count() }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Weekly</td>
+                                    <td>{{ $routines->where('frequency', 'weekly')->count() }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Monthly</td>
+                                    <td>{{ $routines->where('frequency', 'monthly')->count() }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 mb-4">
-                <div class="card shadow-sm h-100">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">Notes</h5>
-                        <p class="card-text flex-grow-1">You have <strong>{{ $notesCount }}</strong> notes saved.</p>
-                        <a href="{{ route('notes.index') }}" class="btn btn-primary mt-auto">View Notes</a>
-                    </div>
-                </div>
-            </div>
+
             <div class="col-md-3 mb-4">
                 <div class="card shadow-sm h-100">
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title">Files</h5>
-                        <p class="card-text flex-grow-1">You have <strong>{{ $filesCount }}</strong> files.</p>
-                        <a href="{{ route('files.index') }}" class="btn btn-primary mt-auto">View Files</a>
+                        <p class="card-text flex-grow-1">You have <strong></strong> files.</p>
+                        <a href="#" class="btn btn-primary mt-auto">View Files</a>
                     </div>
                 </div>
             </div>
@@ -90,7 +123,7 @@
             <div class="col-md-6 mb-4">
                 <div class="card shadow-sm h-100">
                     <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">Tasks Due Today</h5>
+                        <h5 class="card-title">Tasks Due Today ({{ $dueToday->count()}})</h5>
                         <ul class="list-group flex-grow-1">
                             <table class="table table-bordered align-middle">
                             @foreach($dueToday as $task)
@@ -140,7 +173,7 @@
             <div class="col-md-6 mb-4">
                 <div class="card shadow-sm h-100">
                     <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">Tasks Over Due</h5>
+                        <h5 class="card-title">Tasks Over Due ({{$overdueTasks->count()}})</h5>
                         <ul class="list-group flex-grow-1">
                             <table class="table table-bordered align-middle">
                             @foreach($overdueTasks as $task)

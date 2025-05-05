@@ -49,4 +49,18 @@ class UserController extends Controller
 
         return view('users.index', compact('users'));
     }
+
+    public function employee_index(Request $request)
+    { 
+        $users = User::all();
+        $projects = Project::all();
+        return view('users.employee_index', compact('users', 'projects'));
+    }
+    
+    public function getByDepartment($departmentId)
+    {
+        $users = User::where('project_id', $departmentId)->get();
+        return response()->json($users);
+    }
+
 }

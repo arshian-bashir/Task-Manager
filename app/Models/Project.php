@@ -10,7 +10,7 @@ class Project extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
+        'hod_id',
         'name',
         'description',
         'start_date',
@@ -29,14 +29,12 @@ class Project extends Model
         'end_date' => 'date',
     ];
 
-    public function user()
+    public function hod()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'hod_id');
     }
-
     public function tasks()
-    {
-        
+    {   
         return $this->hasMany(Task::class);
     }
 
@@ -68,6 +66,6 @@ class Project extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'project_teams', 'project_id', 'user_id');
+        return $this->hasMany(User::class, 'project_id');
     }
 }

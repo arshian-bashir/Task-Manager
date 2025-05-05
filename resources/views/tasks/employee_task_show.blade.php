@@ -20,7 +20,8 @@
                             <div class="col-md-6">
                                 <h5 class="card-title">{{ $task->title }}</h5>
                                 <p class="card-text">{{ $task->description }}</p>
-                                <p class="card-text"><strong>Due Date:</strong> {{ $task->due_date }}</p>
+                                <p class="card-text"><strong>Creation Date: </strong>{{ \Carbon\Carbon::parse($task->created_at)->format('F d, Y') }}</p>
+                                <p class="card-text"><strong>Due Date: </strong>{{ \Carbon\Carbon::parse($task->due_date)->format('F d, Y') }}</p>  
                                 <p class="card-text"><strong>Priority:</strong> <span
                                         class="badge {{ $task->priority == 'low' ? 'bg-success' : ($task->priority == 'medium' ? 'bg-warning' : 'bg-danger') }}">{{ ucfirst($task->priority) }}</span>
                                 </p>

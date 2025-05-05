@@ -39,9 +39,13 @@ Route::middleware(['auth', 'checkRole:1'])->group(function () {
     Route::get('tasks', [TaskController::class, 'showall'])->name('tasks.showall');
 
     Route::get('tasks/assigned', [TaskController::class, 'assigned'])->name('tasks.assigned');
-
+    Route::get('tasks/create', [TaskController::class, 'create'])->name('tasks.create');
+    Route::post('tasks/store', [TaskController::class, 'store'])->name('tasks.store');
     Route::get('tasks/{task}', [TaskController::class, 'show'])->name('tasks.show');
     Route::put('tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
+
+    Route::get('/users-by-department/{department}', [UserController::class, 'getByDepartment']);
+
     Route::post('/projects/tasks/{task}/update-status', [TaskController::class, 'updateStatus']);
     Route::post('/comment_update', [TaskController::class, 'commment_update'])->name('tasks.commment_update');
     
@@ -88,5 +92,7 @@ Route::middleware(['auth', 'checkRole:2'])->group(function () {
     Route::post('emp-tasks-create/{project}', [TaskController::class, 'store'])->name('tasks.employee_task_create');
     
     Route::post('/emp-comment_update', [TaskController::class, 'employee_commment_update'])->name('tasks.employee_commment_update');
+
+    Route::get('/emp-users', [UserController::class, 'employee_index'])->name('users.employee_index');
 
 });

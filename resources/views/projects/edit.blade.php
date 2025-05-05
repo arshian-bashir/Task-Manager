@@ -25,6 +25,23 @@
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
+                    <div class="mb-3">
+                        <label for="head_of_department" class="form-label">Head of Department</label>
+                        <select name="head_of_department" id="head_of_department" class="form-select select2" required>
+                            <option value="{{ $project->hod_id }}" disabled selected>
+                                {{ $users->firstWhere('id', $project->hod_id)?->name ?? 'Select a user' }}
+                            </option>
+                            @foreach ($users as $user)
+                                <option value="{{ $user->id }}" {{ $project->hod_id == $user->id ? 'selected' : '' }}>
+                                    {{ $user->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('head_of_department')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+
                     
                     <button type="submit" class="btn btn-primary">Update Department</button>
                 </form>

@@ -138,7 +138,7 @@
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="tasksDropdown">
                     <li><a class="dropdown-item" href="{{ route('tasks.employee_show') }}">Tasks assigned to me</a></li>
-                    <li><a class="dropdown-item" href="{{ route('employee_depart_tasks') }}">Tasks assigned to {{ Auth::user()->project->name }}</a></li>
+                    <li><a class="dropdown-item" href="{{ route('employee_depart_tasks') }}">Tasks assigned to {{ Auth::user()->project?->name ?? 'No Project Assigned' }}</a></li>
                 </ul>
             </li>
 
@@ -161,7 +161,12 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ request()->is('files*') ? 'active' : '' }}" href="#">
-                    <i class="bi bi-file"></i> Files
+                    <i class="bi bi-clipboard"></i> Files
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->is('files*') ? 'active' : '' }}" href="{{ route('users.employee_index') }}">
+                    <i class="bi bi-person"></i> Users 
                 </a>
             </li>
         </ul>

@@ -23,9 +23,39 @@
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
+                    <div class="mb-3">
+                        <label for="head_of_department" class="form-label">Head of Department</label>
+                        <select name="head_of_department" id="head_of_department" class="form-select select2" required>
+                            <option value="" disabled selected>Select a user</option>
+                            @foreach ($users as $user)
+                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('head_of_department')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
                     <button type="submit" class="btn btn-primary">Create</button>
                 </form>
             </div>
         </div>
     </div>
+
+<script>
+
+    $('.select2').select2({
+        placeholder: "Select Head of Department",  
+        allowClear: true,
+        language: {
+            searching: function() {
+                return "Searching...";
+            },
+            inputTooShort: function() {
+                return "Type to search...";
+            }
+        }
+    });
+
+</script>
+
 @endsection

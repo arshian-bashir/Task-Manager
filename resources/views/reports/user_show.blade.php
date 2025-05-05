@@ -8,6 +8,11 @@
         background-color: #f8f9fa; 
         margin-top: 30px; 
     }
+
+    .card-body .card-text {
+        margin-bottom: 4px; 
+    }
+        
 </style>
 <div class="container">
     <div class="bg-white mb-4 shadow-sm p-3 rounded">
@@ -53,6 +58,15 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-2 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Tasks Completed After Due Date</h5>
+                    <br>
+                    <h3 class="card-text flex-grow-1"><strong>{{ number_format($latenessPercentage, 2) }} </strong>%</h3>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="row shaded-row">
             <div class="col-md-4">
@@ -70,6 +84,8 @@
                                     </h5>
                                     <p><strong>Department : </strong>{{ $task->project->name ?? 'No Department' }}</p>
                                     <p class="card-text">{{ $task->description }}</p>
+                                    <p class="card-text"><strong>Creation Date: </strong>{{ \Carbon\Carbon::parse($task->created_at)->format('F d, Y') }}</p>
+                                    <p class="card-text"><strong>Due Date: </strong>{{ \Carbon\Carbon::parse($task->due_date)->format('F d, Y') }}</p>
                                     <a href="{{ route('tasks.show', $task->id) }}" class="btn btn-primary btn-sm"><i class="bi bi-eye"></i></a>
                                 </div>
                             </div>
@@ -93,6 +109,8 @@
                                     </h5>
                                     <p><strong>Department : </strong>{{ $task->project->name ?? 'No Department' }}</p>
                                     <p class="card-text">{{ $task->description }}</p>
+                                    <p class="card-text"><strong>Creation Date: </strong>{{ \Carbon\Carbon::parse($task->created_at)->format('F d, Y') }}</p>
+                                    <p class="card-text"><strong>Due Date: </strong>{{ \Carbon\Carbon::parse($task->due_date)->format('F d, Y') }}</p>
                                     <a href="{{ route('tasks.show', $task->id) }}" class="btn btn-warning btn-sm"><i class="bi bi-eye"></i></a>
                                 </div>
                             </div>
@@ -116,6 +134,8 @@
                                     </h5>
                                     <p><strong>Department : </strong>{{ $task->project->name ?? 'No Department' }}</p>
                                     <p class="card-text">{{ $task->description }}</p>
+                                    <p class="card-text"><strong>Creation Date: </strong>{{ \Carbon\Carbon::parse($task->created_at)->format('F d, Y') }}</p>
+                                    <p class="card-text"><strong>Due Date: </strong>{{ \Carbon\Carbon::parse($task->due_date)->format('F d, Y') }}</p>
                                     <a href="{{ route('tasks.show', $task->id) }}" class="btn btn-success btn-sm"><i class="bi bi-eye"></i></a>
                                 </div>
                             </div>

@@ -26,6 +26,11 @@
         .kanban-item.invisible {
             opacity: 0.4;
         }
+
+        .card-body .card-text {
+            margin-bottom: 4px; 
+        }
+        
     </style>
     
     <div class="container">
@@ -58,6 +63,9 @@
                                     </h5>
                                     
                                     <p class="card-text">{{ $task->description }}</p>
+                                    <p class="card-text"><strong>Department: </strong>{{ $task->project->name }}</p>
+                                    <p class="card-text"><strong>Creation Date: </strong>{{ \Carbon\Carbon::parse($task->created_at)->format('F d, Y') }}</p>
+                                    <p class="card-text"><strong>Due Date: </strong>{{ \Carbon\Carbon::parse($task->due_date)->format('F d, Y') }}</p>
                                     <a href="{{ route('tasks.show', $task->id) }}" class="btn btn-primary btn-sm"><i class="bi bi-eye"></i></a>
                                 </div>
                             </div>
@@ -83,6 +91,8 @@
                                     <span style="font-size: 12px;" class="badge {{ $task->priority == 'low' ? 'bg-success' : ($task->priority == 'medium' ? 'bg-warning' : 'bg-danger') }}">{{ ucfirst($task->priority) }}</span>
                                     </h5>
                                     <p class="card-text">{{ $task->description }}</p>
+                                    <p class="card-text"><strong>Creation Date: </strong>{{ \Carbon\Carbon::parse($task->created_at)->format('F d, Y') }}</p>
+                                    <p class="card-text"><strong>Due Date: </strong>{{ \Carbon\Carbon::parse($task->due_date)->format('F d, Y') }}</p>
                                     <a href="{{ route('tasks.show', $task->id) }}" class="btn btn-warning btn-sm"><i class="bi bi-eye"></i></a>
                                 </div>
                             </div>
@@ -106,6 +116,8 @@
                                     <span style="font-size: 12px;" class="badge {{ $task->priority == 'low' ? 'bg-success' : ($task->priority == 'medium' ? 'bg-warning' : 'bg-danger') }}">{{ ucfirst($task->priority) }}</span>
                                     </h5>
                                     <p class="card-text">{{ $task->description }}</p>
+                                    <p class="card-text"><strong>Creation Date: </strong>{{ \Carbon\Carbon::parse($task->created_at)->format('F d, Y') }}</p>
+                                    <p class="card-text"><strong>Due Date: </strong>{{ \Carbon\Carbon::parse($task->due_date)->format('F d, Y') }}</p>
                                     <a href="{{ route('tasks.show', $task->id) }}" class="btn btn-success btn-sm"><i class="bi bi-eye"></i></a>
                                 </div>
                             </div>
