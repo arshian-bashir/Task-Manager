@@ -26,26 +26,28 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required|string|email|max:255',
-            'password' => 'required|string|min:6',
+            'usernamee' => 'required|string|max:255',
+            'passwordd' => 'required|string|min:6',
         ]);
-        
-        $credentials = $request->only('email', 'password');
-        $remember = $request->filled('remember'); // Check if remember me is checked
 
-        if (Auth::attempt($credentials)) {
+        $credentials = [
+            'usernamee' => $request->input('usernamee'),
+            'password' => $request->input('passwordd'), 
+        ];        
+        $remember = $request->filled('remember');
+
+        if (Auth::guard('task')->attempt($credentials)) {
 
             $request->session()->regenerate(); // Regenerate session to prevent session fixation
-    
+            
             // Get the authenticated user
-            $user = Auth::user();
-
+            $user = Auth::guard('task')->user();
 
             // Check the user's role
-            if ($user->role === 1) {
-                return redirect()->intended(route('dashboard')); // Admin dashboard
-            } elseif ( $user->role === 2) {
-                return redirect()->intended(route('employee_dashboard')); // Employee dashboard
+            if ($user->designation === 'Admin') {
+                return redirect()->route('dashboard'); // Admin dashboard
+            } elseif ( $user->designation === 'Employee') {
+                return redirect()->route('employee_dashboard'); // Employee dashboard
             }
     
             // If no matching role, log the user out
@@ -118,7 +120,8 @@ class LoginController extends Controller
             'upcomingReminders'
         ));
     }
-        public function employee_dashboard(Request $request)
+    
+    public function employee_dashboard(Request $request)
     {
         $todayName = strtolower(now()->format('l'));
         $todayMonth = now()->format('n'); 

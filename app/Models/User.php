@@ -16,11 +16,14 @@ class User extends Authenticatable
      *
      * @var array
      */
+    public $timestamps = false;
+
+    protected $table = 'admn_users';
+
     protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'role',
+        'usernamee',
+        'passwordd',
+        'designation',
     ];
 
     /**
@@ -42,6 +45,15 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function getAuthIdentifierName()
+    {
+        return 'usernamee'; // not 'email'
+    }
+
+    public function getAuthPassword()
+    {
+        return $this->passwordd; // not 'password'
+    }
     /**
      * Get the projects for the user.
      */

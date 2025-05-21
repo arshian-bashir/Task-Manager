@@ -76,16 +76,16 @@
                     <form method="POST" action="{{ route('login.post') }}">
                         @csrf
                         <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" name="email" id="email" class="form-control" placeholder="admin@example.com" required>
+                            <label for="usernamee" class="form-label">Username</label>
+                            <input type="text" name="usernamee" id="usernamee" class="form-control" required>
                             @error('email')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
 
                         <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" name="password" id="password" class="form-control" required>
+                            <label for="passwordd" class="form-label">Password</label>
+                            <input type="password" name="passwordd" id="passwordd" class="form-control" required>
                             @error('password')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror

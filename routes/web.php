@@ -22,7 +22,7 @@ Route::post('login', [LoginController::class, 'login'])->name('login.post');
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
 
-Route::middleware(['auth', 'checkRole:1'])->group(function () {
+Route::middleware(['auth:task', 'checkRole:Admin'])->group(function () {
 
     Route::get('/', [LoginController::class, 'dashboard'])->name('dashboard');
  
@@ -74,7 +74,7 @@ Route::middleware(['auth', 'checkRole:1'])->group(function () {
     // Route::get('reports/show', [ReportController::class, 'show'])->name('reports.show');
 });
 
-Route::middleware(['auth', 'checkRole:2'])->group(function () {
+Route::middleware(['auth:task', 'checkRole:Employee'])->group(function () {
 
     Route::get('/emp-dash', [LoginController::class, 'employee_dashboard'])->name('employee_dashboard');
 

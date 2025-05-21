@@ -14,18 +14,18 @@ class CheckRole
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     
-    public function handle(Request $request, Closure $next, $role): Response
+    public function handle(Request $request, Closure $next, $designation): Response
     {   
 
         if (!$request->user()) {
-            // If user not logged in, skip role checking
-            return $next($request);
+            return redirect()->route('login'); // redirect guests to login
         }
-    
-        if ((int)$request->user()->role !== (int)$role) {
-            return redirect('emp-dash');
+
+        // Check if the user's designation matches the required designation
+        if ($request->user()->designation !== $designation) {
+            abort(403, 'Unauthorized access');
         }
-    
+
         return $next($request);
     }
 }
