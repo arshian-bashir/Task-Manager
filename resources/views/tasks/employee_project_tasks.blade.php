@@ -49,7 +49,7 @@
                     </div>
                     
                     <div class="kanban-list" id="to_do">
-                        @foreach ($tasksList['to_do'] ?? [] as $task)
+                        @foreach ($tasksList['in_progress'] ?? [] as $task)
                             <div class="card mb-3 kanban-item" data-id="{{ $task->id }}" draggable="true">
                                 <div class="card-body">
                                     <h5 class="card-title">
@@ -73,7 +73,7 @@
                         <h4 class="text-white fw-bolder m-0">Completed</h4>
                     </div>
                     <div class="kanban-list" id="to_do">
-                        @foreach ($tasksList['to_do'] ?? [] as $task)
+                        @foreach ($tasksList['completed'] ?? [] as $task)
                             <div class="card mb-3 kanban-item" data-id="{{ $task->id }}" draggable="true">
                                 <div class="card-body">
                                     <h5 class="card-title">
