@@ -47,7 +47,7 @@ class User extends Authenticatable
 
     public function getAuthIdentifierName()
     {
-        return 'usernamee'; // not 'email'
+        return 'id'; // not 'email'
     }
 
     public function getAuthPassword()

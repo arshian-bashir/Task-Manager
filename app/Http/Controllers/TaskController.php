@@ -107,7 +107,7 @@ class TaskController extends Controller
         if ($request->hasFile('file')) {
 
             $filePath = $request->file('file')->store('uploads', 'public');
-        
+            
             File::create([
                 'task_id' => $task->id,
                 'project_id' => $task->project_id,
